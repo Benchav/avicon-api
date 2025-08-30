@@ -50,19 +50,22 @@ export default class ChickenController {
       name,
     } = req.body;
 
-    const newChickenData: ChickenDTO = {
-      loteId,
-      race,
-      birthdate,
-      currentWeight,
-      healthStatus,
-      dateReadyForMeat,
-      diseaseHistory,
-      name,
-    };
+    if (
+      !loteId ||
+      !race ||
+      !birthdate ||
+      !currentWeight ||
+      !healthStatus ||
+      !dateReadyForMeat ||
+      !diseaseHistory
+    ) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const newChickenData: ChickenDTO = req.body;
 
     try {
-      const response= await this.service.addChicken(newChickenData);
+      const response = await this.service.addChicken(newChickenData);
       res.status(201).json({
         message: "Chicken added correctly",
         status: response,
@@ -72,14 +75,13 @@ export default class ChickenController {
     }
   };
 
-  updateChicken=async(req:Request, res:Response)=>{
-    const id:string | undefined = req.params.id;
+  updateChicken = async (req: Request, res: Response) => {
+    const id: string | undefined = req.params.id;
     const data = req.body;
 
     if (!id) {
       return res.status(400).json({ message: "Chicken ID is required." });
     }
-
 
     try {
       const success = await this.service.updateChicken(id, data);
@@ -92,10 +94,10 @@ export default class ChickenController {
     } catch {
       res.status(400).json({ message: "Failed to update chicken" });
     }
-  }
+  };
 
-  deleteChicken =async(req: Request, res:Response)=>{
-    const id:string |undefined  = req.params.id;
+  deleteChicken = async (req: Request, res: Response) => {
+    const id: string | undefined = req.params.id;
     if (!id) {
       return res.status(400).json({ message: "Chicken ID is required." });
     }
@@ -111,5 +113,5 @@ export default class ChickenController {
     } catch {
       res.status(400).json({ message: "Failed to delete chicken" });
     }
-  }
+  };
 }
