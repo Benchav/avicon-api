@@ -11,4 +11,8 @@ export default class ChickenService {
   async getChickens():Promise<ChickenModel[]> {
     return await this.chickenService.getAll();
   }
+
+  async getById(id: string):Promise<ChickenModel | null>{
+    return await this.chickenService.getById(id);
+  }
 }
