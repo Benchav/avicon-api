@@ -38,4 +38,8 @@ export default class ChickenService {
   async updateChicken(id:string,chicken: ChickenModel):Promise<{ success: boolean; message: string }>{
     return await this.chickenService.update(id, chicken);
   }
+
+  async deleteChicken(id:string):Promise<{ success: boolean; message: string }>{
+    return await this.chickenService.delete(id);
+  }
 }
