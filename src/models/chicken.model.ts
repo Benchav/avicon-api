@@ -3,13 +3,13 @@ import { Health } from "./health.enum";
 
 export default class ChickenModel extends BaseModel{
   loteId: string;
-  name?: string | undefined;
   race: string;
   birthdate: string;
   currentWeight: string;
   healthStatus: Health;
   dateReadyForMeat: Date;
   diseaseHistory: string;
+  name?: string | undefined;
 
   constructor(
     id: string,
