@@ -1,7 +1,7 @@
+import BaseModel from "./base.model";
 import { Health } from "./health.enum";
 
-export default class ChickenModel {
-  id: string;
+export default class ChickenModel extends BaseModel{
   loteId: string;
   name?: string | undefined;
   race: string;
@@ -22,7 +22,7 @@ export default class ChickenModel {
     diseaseHistory: string,
     name?: string,
   ) {
-    this.id =id;
+    super(id);
     this.loteId=loteId;
     this.race=race;
     this.birthdate=birthdate;
