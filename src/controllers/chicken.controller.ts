@@ -76,7 +76,7 @@ export default class ChickenController {
     const id:string | undefined = req.params.id;
     const data = req.body;
 
-     if (!id) {
+    if (!id) {
       return res.status(400).json({ message: "Chicken ID is required." });
     }
 
@@ -91,6 +91,25 @@ export default class ChickenController {
       }
     } catch {
       res.status(400).json({ message: "Failed to update chicken" });
+    }
+  }
+
+  deleteChicken =async(req: Request, res:Response)=>{
+    const id:string |undefined  = req.params.id;
+    if (!id) {
+      return res.status(400).json({ message: "Chicken ID is required." });
+    }
+
+    try {
+      const result = await this.service.deleteChicken(id);
+
+      if (result) {
+        res.status(200).json({ message: "Chicken deleted successfully" });
+      } else {
+        res.status(404).json({ message: "Chicken not found" });
+      }
+    } catch {
+      res.status(400).json({ message: "Failed to delete chicken" });
     }
   }
 }
