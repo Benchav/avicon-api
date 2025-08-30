@@ -35,7 +35,7 @@ export default class ChickenService {
     return await this.chickenService.add(newChicken);
   }
 
-  async updateChicken(id:string,chicken: ChickenModel):Promise<{ success: boolean; message: string }>{
+  async updateChicken(id:string,chicken: ChickenDTO):Promise<{ success: boolean; message: string }>{
     return await this.chickenService.update(id, chicken);
   }
 

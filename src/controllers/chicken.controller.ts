@@ -77,14 +77,18 @@ export default class ChickenController {
 
   updateChicken = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
-    const data = req.body;
+    const updatedData:ChickenDTO = req.body;
 
     if (!id) {
       return res.status(400).json({ message: "Chicken ID is required." });
     }
+    //este es para testear que haya al menos un campo a actualizar
+    if (Object.keys(updatedData).length === 0) {
+        return res.status(400).json({ message: "No fields provided for update." });
+    }
 
     try {
-      const success = await this.service.updateChicken(id, data);
+      const success = await this.service.updateChicken(id, updatedData);
 
       if (success) {
         res.status(200).json({ message: "Chicken updated successfully" });
