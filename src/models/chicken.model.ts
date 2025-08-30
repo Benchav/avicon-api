@@ -1,3 +1,5 @@
+import { Health } from "./health.enum";
+
 export default class ChickenModel {
   id: string;
   loteId: string;
@@ -5,7 +7,7 @@ export default class ChickenModel {
   race: string;
   birthdate: string;
   currentWeight: string;
-  healthStatus: string;
+  healthStatus: Health;
   dateReadyForMeat: Date;
   diseaseHistory: string;
 
@@ -16,7 +18,7 @@ export default class ChickenModel {
     race: string,
     birthdate: string,
     currentWeight: string,
-    healthStatus: string,
+    healthStatus: Health,
     dateReadyForMeat: Date,
     diseaseHistory: string
   ) {
