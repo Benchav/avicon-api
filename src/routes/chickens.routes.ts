@@ -118,4 +118,107 @@ const chickenController = new ChickenController();
  */
 router.get("/", chickenController.getChickens);
 
+/**
+ * @swagger
+ * /chickens/{id}:
+ *   get:
+ *     summary: Get a chicken by ID
+ *     tags: [Chickens]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Chicken ID
+ *     responses:
+ *       200:
+ *         description: Chicken found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Chicken'
+ *       404:
+ *         description: Chicken not found
+ *       500:
+ *         description: Server error
+ */
+router.get("/:id", chickenController.getChickenById);
+
+/**
+ * @swagger
+ * /chickens:
+ *   post:
+ *     summary: Create a new chicken
+ *     tags: [Chickens]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ChickenDTO'
+ *     responses:
+ *       201:
+ *         description: Chicken created successfully
+ *       400:
+ *         description: Missing or invalid fields
+ *       500:
+ *         description: Failed to add the chicken
+ */
+router.post("/", chickenController.addChicken);
+
+/**
+ * @swagger
+ * /chickens/{id}:
+ *   put:
+ *     summary: Update an existing chicken
+ *     tags: [Chickens]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Chicken ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ChickenDTO'
+ *     responses:
+ *       200:
+ *         description: Chicken updated successfully
+ *       400:
+ *         description: Invalid input or no fields provided
+ *       404:
+ *         description: Chicken not found
+ *       500:
+ *         description: Failed to update chicken
+ */
+router.put("/:id", chickenController.updateChicken);
+
+/**
+ * @swagger
+ * /chickens/{id}:
+ *   delete:
+ *     summary: Delete a chicken by ID
+ *     tags: [Chickens]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Chicken ID
+ *     responses:
+ *       200:
+ *         description: Chicken deleted successfully
+ *       404:
+ *         description: Chicken not found
+ *       500:
+ *         description: Failed to delete chicken
+ */
+router.delete("/:id", chickenController.deleteChicken);
+
 export default router;
