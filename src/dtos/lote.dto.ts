@@ -5,7 +5,7 @@ export interface LoteDTO {
   name: string;
   location: string;
   capacity: number;
-  createdAt?: Date | string; 
+  createdAt?: Date | string | undefined;
   status: LoteStatus;
-  description?: string;
+  description?: string | undefined;
 }
