@@ -199,7 +199,7 @@ router.post("/", chickenController.addChicken);
 router.put("/:id", chickenController.updateChicken);
 
 /**
- * @swagger
+  @swagger
  * /chickens/{id}:
  *   delete:
  *     summary: Delete a chicken by ID
