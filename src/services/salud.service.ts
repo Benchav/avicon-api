@@ -3,14 +3,14 @@ import { SaludDTO } from "../dtos/salud.dto";
 import { GenericCrudService } from "./genericCrud.service";
 import { v4 as uuidv4 } from "uuid";
 
-// Fake DB temporal
+
 const saludData: SaludModel[] = [];
 
 export default class SaludService {
   private repo: GenericCrudService<SaludModel>;
 
   constructor() {
-    this.repo = new GenericCrudService<SaludModel>(saludData as any);
+    this.repo = new GenericCrudService<SaludModel>(saludData);
   }
 
   getAll() {
@@ -31,12 +31,11 @@ export default class SaludService {
       new Date(dto.createdAt ?? new Date()),
       dto.observations
     );
-    this.repo.add(salud); // ✅ usamos add en lugar de create
-    return salud; // devolvemos el objeto recién creado
+    this.repo.add(salud); 
   }
 
   update(id: string, dto: Partial<SaludDTO>) {
-    // Ajuste para que createdAt no dé problemas (string → Date)
+
     if (dto.createdAt && typeof dto.createdAt === "string") {
       dto.createdAt = new Date(dto.createdAt);
     }

@@ -62,8 +62,82 @@ const saludController = new SaludController();
 /**
  * @swagger
  * tags:
- *  - name: Salud
- *    description: API para gestión de registros de salud
+ *   - name: Salud
+ *     description: API para gestión de registros de salud
+ */
+
+/**
+ * @swagger
+ * /salud:
+ *   get:
+ *     summary: Obtener todos los registros de salud
+ *     tags: [Salud]
+ *     responses:
+ *       200:
+ *         description: Lista de registros de salud
+ *   post:
+ *     summary: Crear un nuevo registro de salud
+ *     tags: [Salud]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SaludDTO'
+ *     responses:
+ *       201:
+ *         description: Registro creado
+ *
+ * /salud/{id}:
+ *   get:
+ *     summary: Obtener un registro de salud por ID
+ *     tags: [Salud]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del registro de salud
+ *     responses:
+ *       200:
+ *         description: Registro encontrado
+ *       404:
+ *         description: No encontrado
+ *   put:
+ *     summary: Actualizar un registro de salud por ID
+ *     tags: [Salud]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SaludDTO'
+ *     responses:
+ *       200:
+ *         description: Registro actualizado
+ *       404:
+ *         description: No encontrado
+ *   delete:
+ *     summary: Eliminar un registro de salud por ID
+ *     tags: [Salud]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Registro eliminado
+ *       404:
+ *         description: No encontrado
  */
 
 router.get("/", saludController.getAll);
