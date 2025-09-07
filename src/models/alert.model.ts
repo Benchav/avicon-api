@@ -9,8 +9,8 @@ export enum AlertLevel {
 export default class AlertModel extends BaseModel {
   title: string;
   message: string;
-  loteId?: string | undefined;       // opcional: si aplica a un lote
-  chickenId?: string | undefined;    // opcional: si aplica a un pollo específico
+  loteId?: string | undefined;       
+  chickenId?: string | undefined;    
   level: AlertLevel;
   isResolved: boolean;
   createdAt: Date;
