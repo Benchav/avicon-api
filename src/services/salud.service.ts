@@ -2,9 +2,7 @@ import SaludModel from "../models/salud.model";
 import { SaludDTO } from "../dtos/salud.dto";
 import { GenericCrudService } from "./genericCrud.service";
 import { v4 as uuidv4 } from "uuid";
-
-
-const saludData: SaludModel[] = [];
+import { saludData } from "../data/salud.data";
 
 export default class SaludService {
   private repo: GenericCrudService<SaludModel>;
@@ -31,11 +29,12 @@ export default class SaludService {
       new Date(dto.createdAt ?? new Date()),
       dto.observations
     );
-    this.repo.add(salud); 
+
+    this.repo.add(salud);
+    return salud; 
   }
 
   update(id: string, dto: Partial<SaludDTO>) {
-
     if (dto.createdAt && typeof dto.createdAt === "string") {
       dto.createdAt = new Date(dto.createdAt);
     }
