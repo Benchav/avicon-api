@@ -17,8 +17,8 @@ export default class ReportModel extends BaseModel {
   description: string;
   type: ReportType;
   status: ReportStatus;
-  loteId?: string | undefined;    // opcional: reporte ligado a lote
-  createdBy?: string | undefined; // opcional: usuario que generó el reporte
+  loteId?: string | undefined;    
+  createdBy?: string | undefined; 
   createdAt: Date;
   resolvedAt?: Date | undefined;
 
