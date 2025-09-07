@@ -5,6 +5,7 @@ import chickenRoutes from "./routes/chickens.routes"
 import lotesRoutes from "./routes/lotes.routes";
 import saludRoutes from "./routes/salud.routes";
 import alertsRoutes from "./routes/alerts.routes";
+import reportesRoutes from "./routes/reportes.routes";
 
 const app = express();
 const PORT=3000;
@@ -15,7 +16,8 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use("/chickens", chickenRoutes);
 app.use("/lotes", lotesRoutes);
 app.use("/salud", saludRoutes);
-app.use("/alerts", alertsRoutes)
+app.use("/alerts", alertsRoutes);
+app.use("/reportes", reportesRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
