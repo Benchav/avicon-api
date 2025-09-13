@@ -111,7 +111,7 @@ export default class ChickenController {
       const result = await this.service.deleteChicken(id);
 
       if (result) {
-        res.status(200).json({ message: "Chicken deleted successfully" });
+        res.status(200).json({ success:result.success, message: "Chicken deleted successfully" });
       } else {
         res.status(404).json({ message: "Chicken not found" });
       }
