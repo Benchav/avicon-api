@@ -2,6 +2,7 @@ import { chickenData } from "../data/pollos.data";
 import { ChickenDTO } from "../dtos/chicken.dto";
 import ChickenModel from "../models/chicken.model";
 import { generateId } from "../utils/generateId";
+import { ServiceResult } from "./alert.service";
 import { GenericCrudService } from "./genericCrud.service";
 
 export default class ChickenService {
@@ -18,7 +19,7 @@ export default class ChickenService {
     return await this.chickenService.getById(id);
   }
 
-  async addChicken(chicken: ChickenDTO): Promise<boolean> {
+  async addChicken(chicken: ChickenDTO): Promise<ServiceResult<ChickenModel>> {
     const id = generateId();
     const newChicken = new ChickenModel(
       id,
@@ -31,8 +32,9 @@ export default class ChickenService {
       chicken.diseaseHistory,
       chicken.name
     );
-
-    return await this.chickenService.add(newChicken);
+    const added = await this.chickenService.add(newChicken);
+    if (added) return { success: true, message: "Alert created", data: newChicken };
+    return { success: false, message: "Failed to create alert" };
   }
 
   async updateChicken(id:string,chicken: ChickenDTO):Promise<{ success: boolean; message: string }>{

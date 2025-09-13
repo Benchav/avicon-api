@@ -12,7 +12,7 @@ export default class ChickenController {
   getChickens = async (req: Request, res: Response) => {
     try {
       const chickens = await this.service.getChickens();
-      res.status(200).json(chickens);
+      res.status(200).json({ success: true, data: chickens });
     } catch {
       res.status(500).json({ message: "Failed to get chickens" });
     }
@@ -29,7 +29,7 @@ export default class ChickenController {
       const chicken = await this.service.getById(chickenId);
 
       if (chicken) {
-        res.status(200).json(chicken);
+        res.status(200).json({ success: true, data: chicken});
       } else {
         res.status(404).json({ message: "Chicken not found" });
       }
@@ -67,8 +67,9 @@ export default class ChickenController {
     try {
       const response = await this.service.addChicken(newChickenData);
       res.status(201).json({
-        message: "Chicken added correctly",
-        status: response,
+        success:response.success,
+        message: response.message,
+        status: response.data,
       });
     } catch {
       res.status(400).json({ message: "Failed to add the chicken" });

@@ -4,7 +4,7 @@ import { GenericCrudService } from "./genericCrud.service";
 import { generateId } from "../utils/generateId";
 import { alertsData } from "../data/alerts.data";
 
-type ServiceResult<T> = { success: boolean; message?: string; data?: T | null };
+export type ServiceResult<T> = { success: boolean; message?: string; data?: T | null };
 
 export default class AlertService {
   private repo: GenericCrudService<AlertModel>;
