@@ -2,7 +2,7 @@ import SaludModel from "../models/salud.model";
 import { SaludDTO } from "../dtos/salud.dto";
 import { GenericCrudService } from "./genericCrud.service";
 import { v4 as uuidv4 } from "uuid";
-import { saludData } from "../data/salud.data";
+import { saludData } from "../../Infrastructure.Endpoint/data/salud.data";
 
 export default class SaludService {
   private repo: GenericCrudService<SaludModel>;

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import LoteService from "../services/lote.service";
-import { LoteDTO } from "../dtos/lote.dto";
+import LoteService from "../../Domain.Endpoint/services/lote.service";
+import { LoteDTO } from "../../Domain.Endpoint/dtos/lote.dto";
 
 export default class LoteController {
   private service: LoteService;

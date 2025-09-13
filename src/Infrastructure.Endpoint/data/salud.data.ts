@@ -1,4 +1,4 @@
-import SaludModel, { HealthStatus } from "../models/salud.model";
+import SaludModel, { HealthStatus } from "../../Domain.Endpoint/models/salud.model";
 
 export const saludData: SaludModel[] = [
   new SaludModel(

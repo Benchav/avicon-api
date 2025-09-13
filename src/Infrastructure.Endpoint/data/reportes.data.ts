@@ -1,4 +1,4 @@
-import ReportModel, { ReportType, ReportStatus } from "../models/report.model";
+import ReportModel, { ReportType, ReportStatus } from "../../Domain.Endpoint/models/report.model";
 
 export const reportesData: ReportModel[] = [
   new ReportModel(

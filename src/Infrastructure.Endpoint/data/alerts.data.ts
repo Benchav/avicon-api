@@ -1,4 +1,4 @@
-import AlertModel, { AlertLevel } from "../models/alert.model";
+import AlertModel, { AlertLevel } from "../../Domain.Endpoint/models/alert.model";
 
 export const alertsData: AlertModel[] = [
   new AlertModel(
