@@ -2,7 +2,7 @@ import AlertModel from "../models/alert.model";
 import { AlertDTO } from "../dtos/alert.dto";
 import { GenericCrudService } from "./genericCrud.service";
 import { generateId } from "../utils/generateId";
-import { alertsData } from "../data/alerts.data";
+import { alertsData } from "../../Infrastructure.Endpoint/data/alerts.data";
 
 export type ServiceResult<T> = { success: boolean; message?: string; data?: T | null };
 

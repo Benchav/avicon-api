@@ -1,5 +1,5 @@
-import { ChickenDTO } from "../dtos/chicken.dto";
-import ChickenService from "../services/chicken.service";
+import { ChickenDTO } from "../../Domain.Endpoint/dtos/chicken.dto";
+import ChickenService from "../../Domain.Endpoint/services/chicken.service";
 import { Request, Response } from "express";
 
 export default class ChickenController {

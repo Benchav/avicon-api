@@ -1,4 +1,4 @@
-import { lotesData } from "../data/lotes.data";
+import { lotesData } from "../../Infrastructure.Endpoint/data/lotes.data";
 import LoteModel, { LoteStatus } from "../models/lote.model";
 import { LoteDTO } from "../dtos/lote.dto";
 import { generateId } from "../utils/generateId";

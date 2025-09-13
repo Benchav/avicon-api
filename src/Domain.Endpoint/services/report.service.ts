@@ -2,7 +2,7 @@ import ReportModel from "../models/report.model";
 import { ReportDTO } from "../dtos/report.dto";
 import { GenericCrudService } from "./genericCrud.service";
 import { generateId } from "../utils/generateId";
-import { reportesData } from "../data/reportes.data";
+import { reportesData } from "../../Infrastructure.Endpoint/data/reportes.data";
 
 type ServiceResult<T> = { success: boolean; message?: string; data?: T | null };
 

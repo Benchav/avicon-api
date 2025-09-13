@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import AlertService from "../services/alert.service";
-import { AlertDTO } from "../dtos/alert.dto";
+import AlertService from "../../Domain.Endpoint/services/alert.service";
+import { AlertDTO } from "../../Domain.Endpoint/dtos/alert.dto";
 
 type IdParam = { id: string };
 

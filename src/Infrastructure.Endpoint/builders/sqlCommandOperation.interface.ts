@@ -1,4 +1,4 @@
-import BaseModel from "../models/base.model";
+import BaseModel from "../../Domain.Endpoint/models/base.model";
 import { SqlReadOperation, SqlWriteOperation } from "./sqlOperations.enum";
 
 export interface ISqlCommandOperationBuilder {

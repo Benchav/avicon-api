@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import ReportService from "../services/report.service";
-import { ReportDTO } from "../dtos/report.dto";
+import ReportService from "../../Domain.Endpoint/services/report.service";
+import { ReportDTO } from "../../Domain.Endpoint/dtos/report.dto";
 
 type IdParam = { id: string };
 

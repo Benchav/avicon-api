@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import SaludService from "../services/salud.service";
+import SaludService from "../../Domain.Endpoint/services/salud.service";
 
 type IdParam = { id: string };
 

@@ -1,4 +1,4 @@
-import { chickenData } from "../data/pollos.data";
+import { chickenData } from "../../Infrastructure.Endpoint/data/pollos.data";
 import { ChickenDTO } from "../dtos/chicken.dto";
 import ChickenModel from "../models/chicken.model";
 import { generateId } from "../utils/generateId";

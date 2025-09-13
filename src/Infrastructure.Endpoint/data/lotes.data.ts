@@ -1,4 +1,4 @@
-import LoteModel, { LoteStatus } from "../models/lote.model";
+import LoteModel, { LoteStatus } from "../../Domain.Endpoint/models/lote.model";
 
 export const lotesData: LoteModel[] = [
   new LoteModel(

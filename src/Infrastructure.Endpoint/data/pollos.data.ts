@@ -1,5 +1,5 @@
-import ChickenModel from '../models/chicken.model';
-import { Health } from '../models/health.enum';
+import ChickenModel from '../../Domain.Endpoint/models/chicken.model';
+import { Health } from '../../Domain.Endpoint/models/health.enum';
 
 export const chickenData: ChickenModel[] = [
   {
