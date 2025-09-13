@@ -33,12 +33,17 @@ export default class ChickenService {
       chicken.name
     );
     const added = await this.chickenService.add(newChicken);
-    if (added) return { success: true, message: "Alert created", data: newChicken };
-    return { success: false, message: "Failed to create alert" };
+    if (added) return { success: true, message: "Chicken created", data: newChicken };
+    return { success: false, message: "Failed to create chicken" };
   }
 
-  async updateChicken(id:string,chicken: ChickenDTO):Promise<{ success: boolean; message: string }>{
-    return await this.chickenService.update(id, chicken);
+  async updateChicken(id:string,chicken: ChickenDTO):Promise<ServiceResult<ChickenModel | null>>{
+    const result = await this.chickenService.update(id, chicken);
+    if (result.success) {
+      const updated = await this.getById(id);
+      return { success: true, message: result.message, data: updated ?? null };
+    }
+    return { success: false, message: result.message };
   }
 
   async deleteChicken(id:string):Promise<{ success: boolean; message: string }>{
