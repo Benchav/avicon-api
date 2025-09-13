@@ -92,7 +92,7 @@ export default class ChickenController {
       const success = await this.service.updateChicken(id, updatedData);
 
       if (success) {
-        res.status(200).json({ message: "Chicken updated successfully" });
+        res.status(200).json({ success: success.success, data: success.data, message: success.message });
       } else {
         res.status(404).json({ message: "Chicken not found" });
       }
