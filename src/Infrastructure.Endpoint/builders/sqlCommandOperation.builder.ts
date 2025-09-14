@@ -1,4 +1,3 @@
-import { SqlCommandOperationBuilder } from "./sqlCommandOperation.builder";
 import { IEntitiesService } from "./../interfaces/entitiesService.interface";
 import BaseModel from "../../Domain.Endpoint/models/base.model";
 import {
@@ -25,7 +24,7 @@ export class SqlCommandOperationBuilder implements ISqlCommandOperationBuilder {
   }
 
   Initialize<TEntity extends BaseModel>(): IHaveSqlReadOperation {
-    return new SqlCommandOperationBuilderGeneric<TEntity>(
+    return new SqlCommandReadBuilder<TEntity>(
       this._entitiesService
     );
   }
@@ -61,10 +60,13 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
     }
   }
 
-  private getInsertCommand():SqlCommand {
+  private getInsertCommand(): SqlCommand {
     const entitySettings = this.entitiesService.GetSettings<TEntity>();
-    const sqlQuery=  this.getInsertQuery(entitySettings.tableName, entitySettings.columns)
-    const parameters = this.getSqlParameters(entitySettings.columns)
+    const sqlQuery = this.getInsertQuery(
+      entitySettings.tableName,
+      entitySettings.columns
+    );
+    const parameters = this.getSqlParameters(entitySettings.columns);
     return { query: sqlQuery, parameters };
   }
 
@@ -79,8 +81,53 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
     )}) VALUES (${parameterNames.join(", ")});`;
   }
 
+  private getUpdateCommand(): SqlCommand {
+    const entitySettings = this.entitiesService.GetSettings<TEntity>();
+    const sqlQuery = this.getUpdateQuery(
+      entitySettings.tableName,
+      entitySettings.columns
+    );
+    const parameters = this.getSqlParameters(entitySettings.columns);
+    return { query: sqlQuery, parameters };
+  }
+
+  private getUpdateQuery(
+    entityName: string,
+    columns: SqlColumnSettings[]
+  ): string {
+    const primaryKey = columns.find((c) => c.isPrimaryKey);
+    if (!primaryKey) throw new Error("No primary key found for update.");
+
+    const setClauses = columns
+      .filter((c) => !c.isPrimaryKey)
+      .map((c) => `${c.name} = ${c.parameterName}`);
+
+    return `UPDATE ${entityName} SET ${setClauses.join(", ")} WHERE ${
+      primaryKey.name
+    } = ${primaryKey.parameterName};`;
+  }
+
+  private getDeleteCommand(): SqlCommand {
+    const entitySettings = this.entitiesService.GetSettings<TEntity>();
+    const sqlQuery = this.getDeleteQuery(
+      entitySettings.tableName,
+      entitySettings.columns
+    );
+    const parameters = this.getSqlParameters(entitySettings.columns);
+    return { query: sqlQuery, parameters };
+  }
+
+  private getDeleteQuery(
+    entityName: string,
+    columns: SqlColumnSettings[]
+  ): string {
+    const primaryKey = columns.find((c) => c.isPrimaryKey);
+    if (!primaryKey) throw new Error("No primary key found for delete.");
+    return `DELETE FROM ${entityName} WHERE ${primaryKey.name} = ${primaryKey.parameterName};`;
+  }
+
   //funcion para obtener los parametros y el valor a insertar con los parametros
-  //ej: @name es el parameter "oscar" seria el value 
+  //ej: @name es el parameter "oscar" seria el value
   private getSqlParameters(
     columns: SqlColumnSettings[]
   ): { name: string; value: any }[] {
@@ -89,35 +136,94 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
       value: (this.entity as any)[c.domainName] ?? null,
     }));
   }
+}
 
-  private getUpdateCommand(): SqlCommand {
+export class SqlCommandReadBuilder<TEntity extends BaseModel>
+  implements IHaveSqlReadOperation, IExecuteReadBuilder, IHavePrimaryKeyValue
+{
+  private operation!: SqlReadOperation;
+  private readonly entitiesService: IEntitiesService;
+  private idValue?: string; // se guarda el Id si la operación es GetById
+
+  constructor(entitiesService: IEntitiesService) {
+    this.entitiesService = entitiesService;
+  }
+
+  WithOperation(operation: SqlReadOperation): IHavePrimaryKeyValue {
+    this.operation = operation;
+    return this;
+  }
+
+  WithId(id: string): IExecuteReadBuilder {
+    this.idValue = id;
+    return this;
+  }
+
+  BuildReader(): SqlCommand {
+    switch (this.operation) {
+      case SqlReadOperation.Select:
+        return this.getSelectAllCommand();
+      case SqlReadOperation.SelectById:
+        return this.getSelectByIdCommand();
+      default:
+        throw new Error("Invalid read operation.");
+    }
+  }
+
+  private getSelectAllCommand(): SqlCommand {
     const entitySettings = this.entitiesService.GetSettings<TEntity>();
-    const sqlQuery = this.getUpdateQuery(entitySettings.tableName, entitySettings.columns);
-    const parameters = this.getSqlParameters(entitySettings.columns);
+    const sqlQuery = this.getSelectAllQuery(
+      entitySettings.tableName,
+      entitySettings.columns
+    );
+    return { query: sqlQuery, parameters: [] };
+  }
+
+  private getSelectAllQuery(
+    entityName: string,
+    columns: SqlColumnSettings[]
+  ): string {
+    const columnNames = columns.map((c) => c.name).join(", ");
+    return `SELECT ${columnNames} FROM ${entityName};`;
+  }
+
+  private getSelectByIdCommand(): SqlCommand {
+    const entitySettings = this.entitiesService.GetSettings<TEntity>();
+    const sqlQuery = this.getSelectByIdQuery(
+      entitySettings.tableName,
+      entitySettings.columns
+    );
+    const parameters = this.getPrimaryKeyParameter(entitySettings.columns);
     return { query: sqlQuery, parameters };
   }
 
-  private getUpdateQuery(entityName: string, columns: SqlColumnSettings[]): string {
-    const primaryKey = columns.find(c => c.isPrimaryKey);
-    if (!primaryKey) throw new Error("No primary key found for update.");
+   private getSelectByIdQuery(
+    entityName: string,
+    columns: SqlColumnSettings[]
+  ): string {
+    const primaryKey = columns.find((c) => c.isPrimaryKey);
+    if (!primaryKey)
+      throw new Error("No primary key found for SELECT BY ID.");
 
-    const setClauses = columns
-      .filter(c => !c.isPrimaryKey)
-      .map(c => `${c.name} = ${c.parameterName}`);
-
-    return `UPDATE ${entityName} SET ${setClauses.join(", ")} WHERE ${primaryKey.name} = ${primaryKey.parameterName};`;
+    const columnNames = columns.map((c) => c.name).join(", ");
+    return `SELECT ${columnNames} FROM ${entityName} WHERE ${
+      primaryKey.name
+    } = ${primaryKey.parameterName};`;
   }
 
-  private getDeleteCommand(): SqlCommand {
-    const entitySettings = this.entitiesService.GetSettings<TEntity>();
-    const sqlQuery = this.getDeleteQuery(entitySettings.tableName, entitySettings.columns);
-    const parameters = this.getSqlParameters(entitySettings.columns);
-    return { query: sqlQuery, parameters };
+  private getPrimaryKeyParameter(
+    columns: SqlColumnSettings[]
+  ): { name: string; value: any }[] {
+    const primaryKey = columns.find((c) => c.isPrimaryKey);
+    if (!primaryKey) throw new Error("No primary key column found.");
+    if (!this.idValue) throw new Error("No id value provided.");
+
+    return [
+      {
+        name: primaryKey.parameterName,
+        value: this.idValue,
+      },
+    ];
   }
 
-  private getDeleteQuery(entityName: string, columns: SqlColumnSettings[]): string {
-    const primaryKey = columns.find(c => c.isPrimaryKey);
-    if (!primaryKey) throw new Error("No primary key found for delete.");
-    return `DELETE FROM ${entityName} WHERE ${primaryKey.name} = ${primaryKey.parameterName};`;
-  }
 }
