@@ -1,10 +1,10 @@
 export enum SqlWriteOperation {
-  Create='CREATE',
-  Update='UPDATE',
-  Delete='DELETE',
+  Create,
+  Update,
+  Delete,
 }
 
 export enum SqlReadOperation {
-  Select='SELECT',
-  SelectById='SELECT_BY_ID',
+  Select,
+  SelectById,
 }
