@@ -1,5 +1,6 @@
 import BaseModel from "../../Domain.Endpoint/models/base.model";
 import { SqlReadOperation, SqlWriteOperation } from "../builders/sqlOperations.enum";
+import { SqlCommand } from "./sqlCommand.interface";
 
 export interface ISqlCommandOperationBuilder {
   From<TEntity extends BaseModel>(entity: TEntity): IHaveSqlWriteOperation;
@@ -11,7 +12,7 @@ export interface IHaveSqlWriteOperation {
 }
 
 export interface IExecuteWriteBuilder {
-  BuildWritter(): string; 
+  BuildWritter(): SqlCommand; 
 }
 
 export interface IHaveSqlReadOperation {
@@ -23,5 +24,5 @@ export interface IHavePrimaryKeyValue extends IExecuteReadBuilder {
 }
 
 export interface IExecuteReadBuilder {
-  BuildReader(): string; 
+  BuildReader(): SqlCommand; 
 }
