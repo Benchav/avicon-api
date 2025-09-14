@@ -1,5 +1,5 @@
 import BaseModel from "../../Domain.Endpoint/models/base.model";
-import { SqlReadOperation, SqlWriteOperation } from "./sqlOperations.enum";
+import { SqlReadOperation, SqlWriteOperation } from "../builders/sqlOperations.enum";
 
 export interface ISqlCommandOperationBuilder {
   From<TEntity extends BaseModel>(entity: TEntity): IHaveSqlWriteOperation;
