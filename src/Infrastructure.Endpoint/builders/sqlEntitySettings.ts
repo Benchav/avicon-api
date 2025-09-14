@@ -14,15 +14,17 @@ export class SqlEntitySettings {
 }
 
 export class SqlColumnSettings {
-  name: string;
-  domainName: string;
-  parameterName: string;
+  name: string; //name of the column in sql database
+  domainName: string; //name of the column in project code
   isPrimaryKey: boolean;
+  //name to use like parameter with @ like @name
+  public get parameterName(): string {
+    return `@${this.name}`;
+  }
 
-  constructor(name:string, domainName:string, parameterName:string, isPrimaryKey:boolean){
+  constructor(name:string, domainName:string, isPrimaryKey:boolean){
     this.name=name;
     this.domainName=domainName;
-    this.parameterName=parameterName;
     this.isPrimaryKey=isPrimaryKey;
   }
 }
