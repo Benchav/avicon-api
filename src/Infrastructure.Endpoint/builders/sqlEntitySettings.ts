@@ -14,9 +14,9 @@ export class SqlEntitySettings {
 }
 
 export class SqlColumnSettings {
-  name: string;
-  domainName: string;
-  parameterName: string;
+  name: string; //name of the column in sql database
+  domainName: string; //name of the column in project code
+  parameterName: string; //name to use like parameter with @ like @name
   isPrimaryKey: boolean;
 
   constructor(name:string, domainName:string, parameterName:string, isPrimaryKey:boolean){
