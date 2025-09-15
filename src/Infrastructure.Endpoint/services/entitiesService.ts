@@ -38,6 +38,6 @@ export class EntitiesService implements IEntitiesService {
     ];
 
     //aca definimos el nombre de la tabla en nuestro caso chickens
-    return new SqlEntitySettings("chickens", columns); 
+    return new SqlEntitySettings("CHICKENS", columns); 
   }
 }
