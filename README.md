@@ -54,12 +54,29 @@ http://localhost:3000/api-docs
 ###
 ```bash
 src/
-├── controllers/      # Lógica de controladore
-├── routes/           # Definición de rutas
-├── models/           # Modelos / entidades
-├── middlewares/      # Middlewares de Express
-├── utils/            # Utilidades varias
-├── app.ts            # Configuración principal de Express</p>
+├── Application/                   # Capa de aplicación (casos de uso)
+│   ├── services/
+│   │   ├── interfaces/            # Interfaces de servicios de aplicación
+│   │   └── implementations/       # Implementaciones de los servicios
+│   ├── dtos/                      # Objetos de transferencia de datos
+│   └── use_cases/                 # Lógica de orquestación (casos de uso específicos)
+├── Domain/                        # Capa del Dominio (corazón del negocio)
+│   ├── models/                    # Entidades, agregados y objetos de valor
+│   ├── repositories/              # Interfaces de los repositorios
+│   └── services/                  # Servicios de dominio (lógica de negocio que no va en entidades)
+├── Infrastructure/                # Capa de infraestructura (detalles técnicos)
+│   ├── database/                  # Configuración y conexión a la base de datos
+│   │   ├── models/                # Modelos de base de datos (ej. ORM)
+│   │   ├── singleton/             # Interfaces y clases singleton 
+│   │   └── repositories/          # Implementaciones de los repositorios
+│   ├── utilities/                 # Utilidades para la infraestructura
+│   ├── builders/                  # builder para construir sql queries
+│   └── swagger/                   # Archivos de configuración de Swagger
+├── WebApi/                        # Capa de presentación (API)
+│   ├── controllers/               # Controladores de la API (exponen la lógica de la aplicación)
+│   ├── routes/                    # Definición de rutas
+│   └── middlewares/               # Middleware para la API
+└── app.ts                         # Archivo de inicio de la aplicación
 ```
 ###
 
