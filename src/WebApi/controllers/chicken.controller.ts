@@ -1,19 +1,22 @@
+import { inject, injectable } from "tsyringe";
 import { ChickenDTO } from "../../Domain.Endpoint/dtos/chicken.dto";
-import ChickenService from "../../Domain.Endpoint/services/chicken.service";
+import { IChickenService } from "../../Domain.Endpoint/interfaces/services/chickenService.interface";
 import { Request, Response } from "express";
 
+@injectable()
 export default class ChickenController {
-  private service: ChickenService;
-
-  constructor() {
-    this.service = new ChickenService();
+  private readonly service: IChickenService
+  constructor(@inject('IChickenService') service: IChickenService ) {
+    this.service= service;
   }
 
   getChickens = async (req: Request, res: Response) => {
     try {
       const chickens = await this.service.getChickens();
+      console.log(chickens);
       res.status(200).json({ success: true, data: chickens });
-    } catch {
+    } catch(error) {
+      console.log(error);
       res.status(500).json({ message: "Failed to get chickens" });
     }
   };
@@ -29,7 +32,7 @@ export default class ChickenController {
       const chicken = await this.service.getById(chickenId);
 
       if (chicken) {
-        res.status(200).json({ success: true, data: chicken});
+        res.status(200).json({ success: true, data: chicken });
       } else {
         res.status(404).json({ message: "Chicken not found" });
       }
@@ -67,7 +70,7 @@ export default class ChickenController {
     try {
       const response = await this.service.addChicken(newChickenData);
       res.status(201).json({
-        success:response.success,
+        success: response.success,
         message: response.message,
         status: response.data,
       });
@@ -78,21 +81,29 @@ export default class ChickenController {
 
   updateChicken = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
-    const updatedData:ChickenDTO = req.body;
+    const updatedData: ChickenDTO = req.body;
 
     if (!id) {
       return res.status(400).json({ message: "Chicken ID is required." });
     }
     //este es para testear que haya al menos un campo a actualizar
     if (Object.keys(updatedData).length === 0) {
-        return res.status(400).json({ message: "No fields provided for update." });
+      return res
+        .status(400)
+        .json({ message: "No fields provided for update." });
     }
 
     try {
       const success = await this.service.updateChicken(id, updatedData);
 
       if (success) {
-        res.status(200).json({ success: success.success, data: success.data, message: success.message });
+        res
+          .status(200)
+          .json({
+            success: success.success,
+            data: success.data,
+            message: success.message,
+          });
       } else {
         res.status(404).json({ message: "Chicken not found" });
       }
@@ -111,7 +122,12 @@ export default class ChickenController {
       const result = await this.service.deleteChicken(id);
 
       if (result) {
-        res.status(200).json({ success:result.success, message: "Chicken deleted successfully" });
+        res
+          .status(200)
+          .json({
+            success: result.success,
+            message: "Chicken deleted successfully",
+          });
       } else {
         res.status(404).json({ message: "Chicken not found" });
       }
