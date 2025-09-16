@@ -1,8 +1,9 @@
 import express from 'express'
 import ChickenController from '../controllers/chicken.controller'
+import { container } from 'tsyringe';
 
 const router = express.Router();
-const chickenController = new ChickenController();
+const chickenController = container.resolve(ChickenController);
 
 /**
  * @swagger
