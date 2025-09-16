@@ -1,6 +1,7 @@
 import BaseModel from "../../Domain.Endpoint/models/base.model";
 import { SqlEntitySettings } from "../builders/sqlEntitySettings";
+import { EntityType } from "../utils/entityTypes";
 
 export interface IEntitiesService{
-   GetSettings<TEntity extends BaseModel>(type: new (...args: any[]) => TEntity): SqlEntitySettings;
+   GetSettings(type: EntityType): SqlEntitySettings;
 }
