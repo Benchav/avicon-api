@@ -1,14 +1,19 @@
+import "reflect-metadata";
+import './WebApi/container';
 import express from 'express';
 import swaggerUI from "swagger-ui-express";
 import specs from "./WebApi/swagger/swagger";
+import reportesRoutes from "./WebApi/routes/reportes.routes";
 import chickenRoutes from "./WebApi/routes/chickens.routes"
 import lotesRoutes from "./WebApi/routes/lotes.routes";
 import saludRoutes from "./WebApi/routes/salud.routes";
 import alertsRoutes from "./WebApi/routes/alerts.routes";
-import reportesRoutes from "./WebApi/routes/reportes.routes";
+
 
 const app = express();
 const PORT=3000;
+
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
