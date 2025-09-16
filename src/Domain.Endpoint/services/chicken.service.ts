@@ -1,22 +1,25 @@
-import { chickenData } from "../../Infrastructure.Endpoint/data/pollos.data";
-import { ChickenDTO } from "../dtos/chicken.dto";
+import { IChickenRepository } from "../interfaces/repositories/chickenRepository.interface";
 import ChickenModel from "../models/chicken.model";
+import { ChickenDTO } from "../dtos/chicken.dto";
 import { generateId } from "../utils/generateId";
 import { ServiceResult } from "./alert.service";
-import { GenericCrudService } from "./genericCrud.service";
+import { IChickenService } from "../interfaces/services/chickenService.interface";
+import { inject, injectable } from "tsyringe";
 
-export default class ChickenService {
-  private chickenService: GenericCrudService<ChickenModel>;
-  constructor() {
-    this.chickenService = new GenericCrudService<ChickenModel>(chickenData);
+@injectable()
+export default class ChickenService implements IChickenService {
+  private readonly _chickenRepository: IChickenRepository
+
+  constructor(@inject('IChickenRepository') chickenRepository: IChickenRepository) {
+    this._chickenRepository=chickenRepository;
   }
 
   async getChickens(): Promise<ChickenModel[]> {
-    return await this.chickenService.getAll();
+    return await this._chickenRepository.getAll();
   }
 
   async getById(id: string): Promise<ChickenModel | null> {
-    return await this.chickenService.getById(id);
+    return await this._chickenRepository.getById(id);
   }
 
   async addChicken(chicken: ChickenDTO): Promise<ServiceResult<ChickenModel>> {
@@ -32,21 +35,37 @@ export default class ChickenService {
       chicken.diseaseHistory,
       chicken.name
     );
-    const added = await this.chickenService.add(newChicken);
-    if (added) return { success: true, message: "Chicken created", data: newChicken };
-    return { success: false, message: "Failed to create chicken" };
+
+    await this._chickenRepository.create(newChicken);
+
+    return { success: true, message: "Chicken created", data: newChicken };
   }
 
-  async updateChicken(id:string,chicken: ChickenDTO):Promise<ServiceResult<ChickenModel | null>>{
-    const result = await this.chickenService.update(id, chicken);
-    if (result.success) {
-      const updated = await this.getById(id);
-      return { success: true, message: result.message, data: updated ?? null };
+  async updateChicken(
+    id: string,
+    chicken: ChickenDTO
+  ): Promise<ServiceResult<ChickenModel | null>> {
+    const existing = await this._chickenRepository.getById(id);
+    if (!existing) {
+      return { success: false, message: "Chicken not found", data: null };
     }
-    return { success: false, message: result.message };
+
+    // actualizar solo las propiedades necesarias
+    Object.assign(existing, chicken);
+    await this._chickenRepository.update(existing);
+
+    return { success: true, message: "Chicken updated", data: existing };
   }
 
-  async deleteChicken(id:string):Promise<{ success: boolean; message: string }>{
-    return await this.chickenService.delete(id);
+  async deleteChicken(
+    id: string
+  ): Promise<{ success: boolean; message: string }> {
+    const existing = await this._chickenRepository.getById(id);
+    if (!existing) {
+      return { success: false, message: "Chicken not found" };
+    }
+
+    await this._chickenRepository.delete(existing);
+    return { success: true, message: "Chicken deleted" };
   }
 }

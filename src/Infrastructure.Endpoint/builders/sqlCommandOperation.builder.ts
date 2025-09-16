@@ -1,3 +1,4 @@
+import { EntityType } from './../utils/entityTypes';
 import { IEntitiesService } from "./../interfaces/entitiesService.interface";
 import BaseModel from "../../Domain.Endpoint/models/base.model";
 import {
@@ -11,21 +12,23 @@ import {
 import { SqlReadOperation, SqlWriteOperation } from "./sqlOperations.enum";
 import { SqlColumnSettings } from "./sqlEntitySettings";
 import { SqlCommand } from "../interfaces/sqlCommand.interface";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class SqlCommandOperationBuilder implements ISqlCommandOperationBuilder {
   private readonly _entitiesService: IEntitiesService;
 
-  constructor(entitiesService: IEntitiesService) {
+  constructor(@inject('IEntityService') entitiesService: IEntitiesService) {
     this._entitiesService = entitiesService;
   }
 
-  From<TEntity extends BaseModel>(entity: TEntity): IHaveSqlWriteOperation {
-    return new SqlCommandWriteBuilder<TEntity>(this._entitiesService, entity);
+  From<TEntity extends BaseModel>(entityType: EntityType,entity: TEntity): IHaveSqlWriteOperation {
+    return new SqlCommandWriteBuilder<TEntity>(this._entitiesService, entityType, entity);
   }
 
-  Initialize<TEntity extends BaseModel>(): IHaveSqlReadOperation {
+  Initialize<TEntity extends BaseModel>(entityType: EntityType): IHaveSqlReadOperation {
     return new SqlCommandReadBuilder<TEntity>(
-      this._entitiesService
+      this._entitiesService, entityType
     );
   }
 }
@@ -35,11 +38,14 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
 {
   private operation!: SqlWriteOperation;
   private readonly entity: TEntity;
+  private readonly entityType: EntityType;
   private readonly entitiesService: IEntitiesService;
 
-  constructor(entitiesService: IEntitiesService, entity: TEntity) {
+  constructor(entitiesService: IEntitiesService,  entityType: EntityType, entity: TEntity) {
     this.entity = entity;
     this.entitiesService = entitiesService;
+    this.entityType= entityType;
+
   }
 
   WithOperation(operation: SqlWriteOperation): IExecuteWriteBuilder {
@@ -61,7 +67,7 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
   }
 
   private getInsertCommand(): SqlCommand {
-    const entitySettings = this.entitiesService.GetSettings<TEntity>();
+    const entitySettings = this.entitiesService.GetSettings(this.entityType);
     const sqlQuery = this.getInsertQuery(
       entitySettings.tableName,
       entitySettings.columns
@@ -82,7 +88,7 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
   }
 
   private getUpdateCommand(): SqlCommand {
-    const entitySettings = this.entitiesService.GetSettings<TEntity>();
+    const entitySettings = this.entitiesService.GetSettings(this.entityType);
     const sqlQuery = this.getUpdateQuery(
       entitySettings.tableName,
       entitySettings.columns
@@ -108,7 +114,7 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
   }
 
   private getDeleteCommand(): SqlCommand {
-    const entitySettings = this.entitiesService.GetSettings<TEntity>();
+    const entitySettings = this.entitiesService.GetSettings(this.entityType);
     const sqlQuery = this.getDeleteQuery(
       entitySettings.tableName,
       entitySettings.columns
@@ -143,10 +149,12 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
 {
   private operation!: SqlReadOperation;
   private readonly entitiesService: IEntitiesService;
+  private entityType: EntityType;
   private idValue?: string; // se guarda el Id si la operación es GetById
 
-  constructor(entitiesService: IEntitiesService) {
+  constructor(entitiesService: IEntitiesService, entityType: EntityType) {
     this.entitiesService = entitiesService;
+    this.entityType=entityType;
   }
 
   WithOperation(operation: SqlReadOperation): IHavePrimaryKeyValue {
@@ -171,7 +179,7 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
   }
 
   private getSelectAllCommand(): SqlCommand {
-    const entitySettings = this.entitiesService.GetSettings<TEntity>();
+    const entitySettings = this.entitiesService.GetSettings(this.entityType);
     const sqlQuery = this.getSelectAllQuery(
       entitySettings.tableName,
       entitySettings.columns
@@ -188,7 +196,7 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
   }
 
   private getSelectByIdCommand(): SqlCommand {
-    const entitySettings = this.entitiesService.GetSettings<TEntity>();
+    const entitySettings = this.entitiesService.GetSettings(this.entityType);
     const sqlQuery = this.getSelectByIdQuery(
       entitySettings.tableName,
       entitySettings.columns

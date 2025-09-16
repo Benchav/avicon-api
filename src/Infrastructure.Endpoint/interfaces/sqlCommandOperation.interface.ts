@@ -1,10 +1,11 @@
 import BaseModel from "../../Domain.Endpoint/models/base.model";
 import { SqlReadOperation, SqlWriteOperation } from "../builders/sqlOperations.enum";
+import { EntityType } from "../utils/entityTypes";
 import { SqlCommand } from "./sqlCommand.interface";
 
 export interface ISqlCommandOperationBuilder {
-  From<TEntity extends BaseModel>(entity: TEntity): IHaveSqlWriteOperation;
-  Initialize<TEntity extends BaseModel>(): IHaveSqlReadOperation;
+  From<TEntity extends BaseModel>(entityType: EntityType, entity: TEntity): IHaveSqlWriteOperation;
+  Initialize(entityType: EntityType): IHaveSqlReadOperation;
 }
 
 export interface IHaveSqlWriteOperation {
