@@ -1,26 +1,27 @@
+import { EntityType } from './../utils/entityTypes';
 import { SqlEntitySettings, SqlColumnSettings } from "../builders/sqlEntitySettings";
-import ChickenModel from "../../Domain.Endpoint/models/chicken.model";
-import BaseModel from "../../Domain.Endpoint/models/base.model";
 import { IEntitiesService } from "../interfaces/entitiesService.interface";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class EntitiesService implements IEntitiesService {
-  private entities = new Map<Function, SqlEntitySettings>();
+  private entities = new Map<EntityType, SqlEntitySettings>();
 
   constructor() {
     this.buildEntities();
   }
 
-  GetSettings<TEntity extends BaseModel>(type: new (...args: any[]) => TEntity): SqlEntitySettings {
-    const settings = this.entities.get(type);
+  GetSettings(type: EntityType): SqlEntitySettings {
+     const settings = this.entities.get(type);
     if (!settings) {
-      throw new Error(`Entidad no encontrada: ${type.name}`);
+      throw new Error(`Entidad no encontrada: ${type}`);
     }
     return settings;
   }
 
   private buildEntities(): void {
     const chickenSettings = this.getChickenSettings();
-    this.entities.set(ChickenModel, chickenSettings);
+    this.entities.set(EntityType.Chicken, chickenSettings);
 
   }
 
@@ -40,4 +41,5 @@ export class EntitiesService implements IEntitiesService {
     //aca definimos el nombre de la tabla en nuestro caso chickens
     return new SqlEntitySettings("CHICKENS", columns); 
   }
+  
 }
