@@ -2,12 +2,15 @@ import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 import { ISingletonSqlConnection } from "./dbConnection.interface";
 import { SqlCommand } from "../interfaces/sqlCommand.interface";
+import { injectable } from "tsyringe";
+import path from "path";
 
+@injectable()
 export class SingletonSqlConnection implements ISingletonSqlConnection {
   private static instance: SingletonSqlConnection;
   private db!: Database;
 
-  private constructor(){};
+  public constructor(){};
 
   public static getInstance(): SingletonSqlConnection {
     if (!SingletonSqlConnection.instance) {
@@ -16,7 +19,7 @@ export class SingletonSqlConnection implements ISingletonSqlConnection {
     return SingletonSqlConnection.instance;
   }
 
-  async openConnection(file: string = "./farm.db"): Promise<void> {
+  async openConnection(file: string = path.resolve(__dirname, "../database/farm.db")): Promise<void> {
     if (!this.db) {
       this.db = await open({
         filename: file,
@@ -35,16 +38,19 @@ export class SingletonSqlConnection implements ISingletonSqlConnection {
   }
 
   async executeNonQuery(command: SqlCommand): Promise<void> {
+    if (!this.db) await this.openConnection();
     const params = this.mapParameters(command.parameters);
     await this.db.run(command.query, params);
   }
 
   async executeQuery(command: SqlCommand): Promise<any[]> {
+    if (!this.db) await this.openConnection();
     const params = this.mapParameters(command.parameters);
     return await this.db.all(command.query, params);
   }
 
   async executeScalar(command: SqlCommand): Promise<any> {
+    if (!this.db) await this.openConnection();
     const params = this.mapParameters(command.parameters);
     return await this.db.get(command.query, params);
   }
