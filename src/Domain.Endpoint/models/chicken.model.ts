@@ -8,7 +8,7 @@ export default class ChickenModel extends BaseModel{
   currentWeight: string;
   healthStatus: Health;
   dateReadyForMeat: Date;
-  diseaseHistory: string;
+  diseaseHistory?: string;
   name?: string | undefined;
 
   constructor(
