@@ -1,4 +1,4 @@
-import { EntityType } from './../utils/entityTypes';
+import { EntityType } from "./../utils/entityTypes";
 import { IEntitiesService } from "./../interfaces/entitiesService.interface";
 import BaseModel from "../../Domain.Endpoint/models/base.model";
 import {
@@ -18,17 +18,27 @@ import { inject, injectable } from "tsyringe";
 export class SqlCommandOperationBuilder implements ISqlCommandOperationBuilder {
   private readonly _entitiesService: IEntitiesService;
 
-  constructor(@inject('IEntityService') entitiesService: IEntitiesService) {
+  constructor(@inject("IEntityService") entitiesService: IEntitiesService) {
     this._entitiesService = entitiesService;
   }
 
-  From<TEntity extends BaseModel>(entityType: EntityType,entity: TEntity): IHaveSqlWriteOperation {
-    return new SqlCommandWriteBuilder<TEntity>(this._entitiesService, entityType, entity);
+  From<TEntity extends BaseModel>(
+    entityType: EntityType,
+    entity: TEntity
+  ): IHaveSqlWriteOperation {
+    return new SqlCommandWriteBuilder<TEntity>(
+      this._entitiesService,
+      entityType,
+      entity
+    );
   }
 
-  Initialize<TEntity extends BaseModel>(entityType: EntityType): IHaveSqlReadOperation {
+  Initialize<TEntity extends BaseModel>(
+    entityType: EntityType
+  ): IHaveSqlReadOperation {
     return new SqlCommandReadBuilder<TEntity>(
-      this._entitiesService, entityType
+      this._entitiesService,
+      entityType
     );
   }
 }
@@ -41,11 +51,14 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
   private readonly entityType: EntityType;
   private readonly entitiesService: IEntitiesService;
 
-  constructor(entitiesService: IEntitiesService,  entityType: EntityType, entity: TEntity) {
+  constructor(
+    entitiesService: IEntitiesService,
+    entityType: EntityType,
+    entity: TEntity
+  ) {
     this.entity = entity;
     this.entitiesService = entitiesService;
-    this.entityType= entityType;
-
+    this.entityType = entityType;
   }
 
   WithOperation(operation: SqlWriteOperation): IExecuteWriteBuilder {
@@ -115,11 +128,19 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
 
   private getDeleteCommand(): SqlCommand {
     const entitySettings = this.entitiesService.GetSettings(this.entityType);
+    const primaryKey = entitySettings.columns.find((c) => c.isPrimaryKey);
+    if (!primaryKey) throw new Error("No primary key found for delete.");
     const sqlQuery = this.getDeleteQuery(
       entitySettings.tableName,
       entitySettings.columns
     );
-    const parameters = this.getSqlParameters(entitySettings.columns);
+    //const parameters = this.getSqlParameters(entitySettings.columns);
+    const parameters = [
+    {
+      name: primaryKey.parameterName,
+      value: (this.entity as any)[primaryKey.domainName],
+    },
+  ];
     return { query: sqlQuery, parameters };
   }
 
@@ -154,7 +175,7 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
 
   constructor(entitiesService: IEntitiesService, entityType: EntityType) {
     this.entitiesService = entitiesService;
-    this.entityType=entityType;
+    this.entityType = entityType;
   }
 
   WithOperation(operation: SqlReadOperation): IHavePrimaryKeyValue {
@@ -205,18 +226,15 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
     return { query: sqlQuery, parameters };
   }
 
-   private getSelectByIdQuery(
+  private getSelectByIdQuery(
     entityName: string,
     columns: SqlColumnSettings[]
   ): string {
     const primaryKey = columns.find((c) => c.isPrimaryKey);
-    if (!primaryKey)
-      throw new Error("No primary key found for SELECT BY ID.");
+    if (!primaryKey) throw new Error("No primary key found for SELECT BY ID.");
 
     const columnNames = columns.map((c) => c.name).join(", ");
-    return `SELECT ${columnNames} FROM ${entityName} WHERE ${
-      primaryKey.name
-    } = ${primaryKey.parameterName};`;
+    return `SELECT ${columnNames} FROM ${entityName} WHERE ${primaryKey.name} = ${primaryKey.parameterName};`;
   }
 
   private getPrimaryKeyParameter(
@@ -233,5 +251,4 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
       },
     ];
   }
-
 }

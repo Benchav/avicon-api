@@ -38,21 +38,33 @@ export class SingletonSqlConnection implements ISingletonSqlConnection {
   }
 
   async executeNonQuery(command: SqlCommand): Promise<void> {
-    if (!this.db) await this.openConnection();
-    const params = this.mapParameters(command.parameters);
-    await this.db.run(command.query, params);
+     try {
+      await this.openConnection();
+      const params = this.mapParameters(command.parameters);
+      await this.db.run(command.query, params);
+    } finally {
+      await this.closeConnection();
+    }
   }
 
   async executeQuery(command: SqlCommand): Promise<any[]> {
-    if (!this.db) await this.openConnection();
-    const params = this.mapParameters(command.parameters);
-    return await this.db.all(command.query, params);
+    try {
+      await this.openConnection();
+      const params = this.mapParameters(command.parameters);
+      return await this.db.all(command.query, params);
+    } finally {
+      await this.closeConnection();
+    }
   }
 
   async executeScalar(command: SqlCommand): Promise<any> {
-    if (!this.db) await this.openConnection();
-    const params = this.mapParameters(command.parameters);
-    return await this.db.get(command.query, params);
+    try {
+      await this.openConnection();
+      const params = this.mapParameters(command.parameters);
+      return await this.db.get(command.query, params);
+    } finally {
+      await this.closeConnection();
+    }
   }
 
   private mapParameters(parameters: { name: string; value: any }[]) {
