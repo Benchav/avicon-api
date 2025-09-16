@@ -13,7 +13,6 @@ export default class ChickenController {
   getChickens = async (req: Request, res: Response) => {
     try {
       const chickens = await this.service.getChickens();
-      console.log(chickens);
       res.status(200).json({ success: true, data: chickens });
     } catch(error) {
       console.log(error);

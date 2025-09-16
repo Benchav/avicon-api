@@ -86,7 +86,7 @@ export class ChickenRepository implements IChickenRepository {
       .From(EntityType.Chicken, chicken)
       .WithOperation(SqlWriteOperation.Delete)
       .BuildWritter();
-
+      
     await this._connection.executeNonQuery(writeCommand);
   }
 }
