@@ -24,9 +24,9 @@ export default class AlertService {
   async addAlert(dto: AlertDTO): Promise<ServiceResult<AlertModel>> {
     const id = generateId();
     const createdAt = dto.createdAt ? new Date(dto.createdAt) : new Date();
-    if (isNaN(createdAt.getTime())) {
-      return { success: false, message: "Invalid createdAt" };
-    }
+    // if (isNaN(createdAt.getTime())) {
+    //   return { success: false, message: "Invalid createdAt" };
+    // }
 
     const alert = new AlertModel(
       id,
