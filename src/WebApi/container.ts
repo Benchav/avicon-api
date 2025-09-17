@@ -1,5 +1,4 @@
 import { SqlCommandOperationBuilder } from './../Infrastructure.Endpoint/builders/sqlCommandOperation.builder';
-// src/container.ts
 import 'reflect-metadata';
 import { container } from 'tsyringe';
 import { ISingletonSqlConnection } from '../Infrastructure.Endpoint/database/dbConnection.interface';
