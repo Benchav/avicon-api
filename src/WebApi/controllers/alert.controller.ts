@@ -1,4 +1,4 @@
-import { RequestHandler } from "express";
+import { Request, Response } from "express";
 import AlertService from "../../Domain.Endpoint/services/alert.service";
 import { AlertDTO } from "../../Domain.Endpoint/dtos/alert.dto";
 
@@ -11,7 +11,7 @@ export default class AlertController {
     this.service = new AlertService();
   }
 
-  getAll: RequestHandler = async (req, res) => {
+  getAll = async (req: Request, res:Response) => {
     try {
       const items = await this.service.getAlerts();
       res.status(200).json({ success: true, data: items });
@@ -21,8 +21,11 @@ export default class AlertController {
     }
   };
 
-  getById: RequestHandler<IdParam> = async (req, res) => {
-    const { id } = req.params;
+  getById= async (req: Request, res:Response) => {
+    const id: string | undefined = req.params.id;
+     if (!id) {
+      return res.status(400).json({ message: "Alert ID is required." });
+    }
     try {
       const item = await this.service.getById(id);
       if (!item) return res.status(404).json({ success: false, message: "Alert not found" });
@@ -33,7 +36,7 @@ export default class AlertController {
     }
   };
 
-  addAlert: RequestHandler = async (req, res) => {
+  addAlert= async (req: Request, res: Response) => {
     try {
       const dto = req.body as AlertDTO;
 
