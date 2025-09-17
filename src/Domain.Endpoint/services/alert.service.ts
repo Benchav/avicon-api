@@ -24,6 +24,7 @@ export default class AlertService {
   async addAlert(dto: AlertDTO): Promise<ServiceResult<AlertModel>> {
     const id = generateId();
     const createdAt = dto.createdAt ? new Date(dto.createdAt) : new Date();
+    const resolvedAt = dto.resolvedAt ? new Date(dto.resolvedAt) : undefined;
     // if (isNaN(createdAt.getTime())) {
     //   return { success: false, message: "Invalid createdAt" };
     // }
@@ -37,12 +38,11 @@ export default class AlertService {
       createdAt,
       dto.loteId,
       dto.chickenId,
-      dto.resolvedAt ? new Date(dto.resolvedAt) : undefined
+      resolvedAt
     );
 
-    const added = this.repo.add(alert);
-    if (added) return { success: true, message: "Alert created", data: alert };
-    return { success: false, message: "Failed to create alert" };
+    await this.repo.add(alert);
+    return { success: true, message: "Alert created", data: alert };
   }
 
   async updateAlert(id: string, dto: Partial<AlertDTO>): Promise<ServiceResult<AlertModel | null>> {
