@@ -59,7 +59,7 @@ export default class AlertController {
      if (!id) {
       return res.status(400).json({ message: "Chicken ID is required." });
     }
-    
+
     if (Object.keys(dto).length === 0) {
       return res.status(400).json({ success: false, message: "No fields provided for update" });
     }
@@ -73,8 +73,13 @@ export default class AlertController {
     }
   };
 
-  deleteAlert: RequestHandler<IdParam> = async (req, res) => {
-    const { id } = req.params;
+  deleteAlert= async (req: Request, res: Response) => {
+    const id: string | undefined = req.params.id;
+    
+    if (!id) {
+      return res.status(400).json({ message: "Chicken ID is required." });
+    
+    }
     try {
       const result = await this.service.deleteAlert(id);
       if (result.success) return res.status(200).json({ success: true, message: result.message });
