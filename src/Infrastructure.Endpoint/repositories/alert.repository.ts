@@ -1,7 +1,9 @@
 import { IAlertRepository } from "../../Domain.Endpoint/interfaces/repositories/alertRepository.interface";
 import AlertModel from "../../Domain.Endpoint/models/alert.model";
+import { SqlReadOperation } from "../builders/sqlOperations.enum";
 import { ISingletonSqlConnection } from "../database/dbConnection.interface";
 import { ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
+import { EntityType } from "../utils/entityTypes";
 
 export class AlertRepository implements IAlertRepository {
     private readonly _operationBuilder: ISqlCommandOperationBuilder;
@@ -12,8 +14,18 @@ export class AlertRepository implements IAlertRepository {
         this._connection = connection;
     }
 
-    getAll(): Promise<AlertModel[]> {
-        throw new Error("Method not implemented.");
+    async getAll(): Promise<AlertModel[]> {
+        const readCommand = this._operationBuilder.Initialize(EntityType.Alert).WithOperation(SqlReadOperation.Select).BuildReader();
+        const rows = await this._connection.executeQuery(readCommand);
+        return rows.map(row => new AlertModel(
+            row["ID"],
+            row["TITLE"],
+            row["DESCRIPTION"],
+            row["LEVEL"],
+            row["IS_RESOLVED"],
+            row["CREATED_AT"],
+            row["LOTE_ID"]
+        ));
     }
     getById(id: string): Promise<AlertModel | null> {
         throw new Error("Method not implemented.");
