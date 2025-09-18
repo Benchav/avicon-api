@@ -1,6 +1,9 @@
 import { IAlertRepository } from "../../Domain.Endpoint/interfaces/repositories/alertRepository.interface";
 import AlertModel from "../../Domain.Endpoint/models/alert.model";
-import { SqlReadOperation } from "../builders/sqlOperations.enum";
+import {
+  SqlReadOperation,
+  SqlWriteOperation,
+} from "../builders/sqlOperations.enum";
 import { ISingletonSqlConnection } from "../database/dbConnection.interface";
 import { ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
 import { EntityType } from "../utils/entityTypes";
@@ -54,10 +57,16 @@ export class AlertRepository implements IAlertRepository {
       row["LOTE_ID"]
     );
   }
-  
-  create(alert: AlertModel): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async create(alert: AlertModel): Promise<void> {
+    const writeCommand = this._operationBuilder
+      .From(EntityType.Alert, alert)
+      .WithOperation(SqlWriteOperation.Create)
+      .BuildWritter();
+    await this._connection.executeNonQuery(writeCommand);
+    
   }
+  
   update(alert: AlertModel): Promise<void> {
     throw new Error("Method not implemented.");
   }
