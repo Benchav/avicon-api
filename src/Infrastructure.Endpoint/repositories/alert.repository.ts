@@ -74,7 +74,13 @@ export class AlertRepository implements IAlertRepository {
     
     await this._connection.executeNonQuery(writeCommand);
   }
-  delete(alert: AlertModel): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async delete(alert: AlertModel): Promise<void> {
+    const writeCommand = this._operationBuilder
+      .From(EntityType.Alert, alert)
+      .WithOperation(SqlWriteOperation.Delete)
+      .BuildWritter();
+    
+    await this._connection.executeNonQuery(writeCommand);
   }
 }
