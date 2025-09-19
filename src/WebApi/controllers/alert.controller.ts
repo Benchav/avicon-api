@@ -5,10 +5,10 @@ import { AlertDTO } from "../../Domain.Endpoint/dtos/alert.dto";
 type IdParam = { id: string };
 
 export default class AlertController {
-  private service: AlertService;
+  private readonly service: AlertService;
 
-  constructor() {
-    this.service = new AlertService();
+  constructor(service: AlertService) {
+    this.service = service;
   }
 
   getAll = async (req: Request, res:Response) => {
