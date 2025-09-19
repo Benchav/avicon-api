@@ -21,7 +21,7 @@ export async function initializeDatabase(): Promise<void> {
     //
     // Lógica para la tabla de pollos (CHICKENS)
     //
-    console.log('Creando tabla "CHICKENS"...');
+    //console.log('Creando tabla "CHICKENS"...');
     await db.exec(`
       CREATE TABLE IF NOT EXISTS CHICKENS (
         ID TEXT PRIMARY KEY,
@@ -35,9 +35,9 @@ export async function initializeDatabase(): Promise<void> {
         DISEASE_HISTORY TEXT
       );
     `);
-    console.log('Tabla "CHICKENS" creada.');
+    //console.log('Tabla "CHICKENS" creada.');
 
-    console.log('Insertando datos de pollos...');
+    //console.log('Insertando datos de pollos...');
     const insertChickenStmt = await db.prepare(`
       INSERT OR IGNORE INTO CHICKENS (
         ID, LOTE_ID, NAME, RACE, BIRTHDATE, CURRENT_WEIGHT, HEALTH_STATUS, DATE_READY_FOR_MEAT, DISEASE_HISTORY
@@ -57,12 +57,12 @@ export async function initializeDatabase(): Promise<void> {
       );
     }
     await insertChickenStmt.finalize();
-    console.log('Datos de pollos insertados con éxito.');
+    //console.log('Datos de pollos insertados con éxito.');
 
     //
     // Lógica para la tabla de alertas (ALERTS)
     //
-    console.log('\nCreando tabla "ALERTS"...');
+    //console.log('\nCreando tabla "ALERTS"...');
     await db.exec(`
       CREATE TABLE IF NOT EXISTS ALERTS (
         ID TEXT PRIMARY KEY,
@@ -74,9 +74,9 @@ export async function initializeDatabase(): Promise<void> {
         LOTE_ID TEXT
       );
     `);
-    console.log('Tabla "ALERTS" creada.');
+    //console.log('Tabla "ALERTS" creada.');
 
-    console.log('Insertando datos de alertas...');
+    //console.log('Insertando datos de alertas...');
     const insertAlertStmt = await db.prepare(`
       INSERT OR IGNORE INTO ALERTS (
         ID, TITLE, DESCRIPTION, LEVEL, IS_RESOLVED, CREATED_AT, LOTE_ID
@@ -94,12 +94,12 @@ export async function initializeDatabase(): Promise<void> {
       );
     }
     await insertAlertStmt.finalize();
-    console.log('Datos de alertas insertados con éxito.');
+    //console.log('Datos de alertas insertados con éxito.');
     
     //
     // Lógica para la tabla de lotes (LOTES)
     //
-    console.log('\nCreando tabla "LOTES"...');
+    //console.log('\nCreando tabla "LOTES"...');
     await db.exec(`
       CREATE TABLE IF NOT EXISTS LOTES (
         ID TEXT PRIMARY KEY,
@@ -112,9 +112,9 @@ export async function initializeDatabase(): Promise<void> {
         DESCRIPTION TEXT
       );
     `);
-    console.log('Tabla "LOTES" creada.');
+    //console.log('Tabla "LOTES" creada.');
 
-    console.log('Insertando datos de lotes...');
+    //console.log('Insertando datos de lotes...');
     const insertLoteStmt = await db.prepare(`
       INSERT OR IGNORE INTO LOTES (
         ID, CODE, NAME, LOCATION, CAPACITY, CREATED_AT, STATUS, DESCRIPTION
@@ -133,12 +133,12 @@ export async function initializeDatabase(): Promise<void> {
       );
     }
     await insertLoteStmt.finalize();
-    console.log('Datos de lotes insertados con éxito.');
+    //console.log('Datos de lotes insertados con éxito.');
 
     //
     // Lógica para la tabla de reportes (REPORTS)
     //
-    console.log('\nCreando tabla "REPORTS"...');
+    //console.log('\nCreando tabla "REPORTS"...');
     await db.exec(`
       CREATE TABLE IF NOT EXISTS REPORTS (
         ID TEXT PRIMARY KEY,
@@ -152,9 +152,9 @@ export async function initializeDatabase(): Promise<void> {
         RESOLVED_AT TEXT
       );
     `);
-    console.log('Tabla "REPORTS" creada.');
+    //console.log('Tabla "REPORTS" creada.');
 
-    console.log('Insertando datos de reportes...');
+    //console.log('Insertando datos de reportes...');
     const insertReportStmt = await db.prepare(`
       INSERT OR IGNORE INTO REPORTS (
         ID, TITLE, DESCRIPTION, TYPE, STATUS, LOTE_ID, CREATED_BY, CREATED_AT, RESOLVED_AT
@@ -174,12 +174,12 @@ export async function initializeDatabase(): Promise<void> {
       );
     }
     await insertReportStmt.finalize();
-    console.log('Datos de reportes insertados con éxito.');
+    //console.log('Datos de reportes insertados con éxito.');
 
     //
     // Lógica para la tabla de salud (HEALTH_RECORDS)
     //
-    console.log('\nCreando tabla "HEALTH_RECORDS"...');
+    //console.log('\nCreando tabla "HEALTH_RECORDS"...');
     await db.exec(`
       CREATE TABLE IF NOT EXISTS HEALTH_RECORDS (
         ID TEXT PRIMARY KEY,
@@ -191,9 +191,9 @@ export async function initializeDatabase(): Promise<void> {
         CREATED_AT TEXT NOT NULL
       );
     `);
-    console.log('Tabla "HEALTH_RECORDS" creada.');
+    //console.log('Tabla "HEALTH_RECORDS" creada.');
 
-    console.log('Insertando datos de salud...');
+    //console.log('Insertando datos de salud...');
     const insertSaludStmt = await db.prepare(`
       INSERT OR IGNORE INTO HEALTH_RECORDS (
         ID, LOTE_ID, DISEASE, TREATMENT, OBSERVATIONS, STATUS, CREATED_AT
@@ -211,7 +211,7 @@ export async function initializeDatabase(): Promise<void> {
       );
     }
     await insertSaludStmt.finalize();
-    console.log('Datos de salud insertados con éxito.');
+    //console.log('Datos de salud insertados con éxito.');
 
   } catch (error) {
     console.error('Error al inicializar la base de datos:', error);
