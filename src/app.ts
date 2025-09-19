@@ -9,6 +9,7 @@ import lotesRoutes from "./WebApi/routes/lotes.routes";
 import saludRoutes from "./WebApi/routes/salud.routes";
 import alertsRoutes from "./WebApi/routes/alerts.routes";
 import cors from 'cors';
+import { initializeDatabase } from "./Infrastructure.Endpoint/database/init-db";
 
 
 const app = express();
@@ -26,8 +27,24 @@ app.use("/salud", saludRoutes);
 app.use("/alerts", alertsRoutes);
 app.use("/reportes", reportesRoutes)
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Función principal para iniciar la aplicación
+async function startServer() {
+    try {
+        console.log("Iniciando la base de datos...");
+        await initializeDatabase(); // Ejecutar la inicialización aquí
+        console.log("Base de datos inicializada.");
+
+        // Inicia el servidor solo después de que la base de datos esté lista
+        app.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.error("Error al iniciar el servidor:", error);
+        process.exit(1); // Salir de la aplicación si hay un error crítico
+    }
+}
+
+// Llama a la función de inicio
+startServer();
 
 export default app;
