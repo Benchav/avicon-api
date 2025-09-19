@@ -12,14 +12,14 @@ const options = {
       },
     },
     servers: [
-      {
-        url: "http://localhost:3000",
-        description: "Local server",
-      },
       // {
-      //   url: "https://general-helaine-oscarmolinapis-9d9dc1c1.koyeb.app/",
-      //   description: "Production server",
+      //   url: "http://localhost:3000",
+      //   description: "Local server",
       // },
+      {
+        url: "https://general-helaine-oscarmolinapis-9d9dc1c1.koyeb.app/",
+        description: "Production server",
+      },
     ],
     components: {
       securitySchemes: {

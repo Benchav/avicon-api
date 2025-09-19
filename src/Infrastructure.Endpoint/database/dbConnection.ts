@@ -19,7 +19,7 @@ export class SingletonSqlConnection implements ISingletonSqlConnection {
     return SingletonSqlConnection.instance;
   }
 
-  async openConnection(file: string = path.resolve(__dirname, "../database/farm.db")): Promise<void> {
+  async openConnection(file: string = path.join(__dirname, "..", "..","..", "farm.db")): Promise<void> {
     if (!this.db) {
       this.db = await open({
         filename: file,

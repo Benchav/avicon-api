@@ -11,7 +11,7 @@ import { saludData } from '../data/salud.data';
 // Ruta de la base de datos
 const dbFilePath = './farm.db';
 
-async function initializeDatabase(): Promise<void> {
+export async function initializeDatabase(): Promise<void> {
   const db = await open({
     filename: dbFilePath,
     driver: sqlite3.Database,
