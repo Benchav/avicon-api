@@ -8,6 +8,7 @@ import chickenRoutes from "./WebApi/routes/chickens.routes"
 import lotesRoutes from "./WebApi/routes/lotes.routes";
 import saludRoutes from "./WebApi/routes/salud.routes";
 import alertsRoutes from "./WebApi/routes/alerts.routes";
+import cors from 'cors';
 
 
 const app = express();
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors())
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use("/chickens", chickenRoutes);
