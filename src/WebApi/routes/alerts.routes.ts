@@ -1,8 +1,9 @@
 import express from "express";
 import AlertController from "../controllers/alert.controller";
+import { container } from "tsyringe";
 
 const router = express.Router();
-const alertController = new AlertController();
+const alertController = container.resolve(AlertController);
 
 /**
  * @swagger
