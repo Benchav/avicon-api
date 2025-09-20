@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import AlertService from "../../Domain.Endpoint/services/alert.service";
 import { AlertDTO } from "../../Domain.Endpoint/dtos/alert.dto";
+import { inject, injectable } from "tsyringe";
 
-type IdParam = { id: string };
-
+@injectable()
 export default class AlertController {
-  private service: AlertService;
+  private readonly service: AlertService;
 
-  constructor() {
-    this.service = new AlertService();
+  constructor(@inject('IAlertService') service: AlertService) {
+    this.service = service;
   }
 
   getAll = async (req: Request, res:Response) => {

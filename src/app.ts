@@ -30,9 +30,9 @@ app.use("/reportes", reportesRoutes)
 // Función principal para iniciar la aplicación
 async function startServer() {
     try {
-        console.log("Iniciando la base de datos...");
+        //console.log("Iniciando la base de datos...");
         await initializeDatabase(); // Ejecutar la inicialización aquí
-        console.log("Base de datos inicializada.");
+        //console.log("Base de datos inicializada.");
 
         // Inicia el servidor solo después de que la base de datos esté lista
         app.listen(PORT, () => {

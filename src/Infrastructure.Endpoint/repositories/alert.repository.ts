@@ -1,3 +1,4 @@
+import { inject, injectable } from "tsyringe";
 import { IAlertRepository } from "../../Domain.Endpoint/interfaces/repositories/alertRepository.interface";
 import AlertModel from "../../Domain.Endpoint/models/alert.model";
 import {
@@ -8,13 +9,14 @@ import { ISingletonSqlConnection } from "../database/dbConnection.interface";
 import { ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
 import { EntityType } from "../utils/entityTypes";
 
+@injectable()
 export class AlertRepository implements IAlertRepository {
   private readonly _operationBuilder: ISqlCommandOperationBuilder;
   private readonly _connection: ISingletonSqlConnection;
 
   constructor(
-    operationBuilder: ISqlCommandOperationBuilder,
-    connection: ISingletonSqlConnection
+    @inject('IOperationBuilder') operationBuilder: ISqlCommandOperationBuilder,
+    @inject('ISingletonSqlConnection') connection: ISingletonSqlConnection
   ) {
     this._operationBuilder = operationBuilder;
     this._connection = connection;
@@ -41,7 +43,7 @@ export class AlertRepository implements IAlertRepository {
   }
   async getById(id: string): Promise<AlertModel | null> {
     const readCommand = this._operationBuilder
-      .Initialize(EntityType.Chicken)
+      .Initialize(EntityType.Alert)
       .WithOperation(SqlReadOperation.SelectById)
       .WithId(id)
       .BuildReader();

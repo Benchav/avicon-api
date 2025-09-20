@@ -21,7 +21,9 @@ export class EntitiesService implements IEntitiesService {
 
   private buildEntities(): void {
     const chickenSettings = this.getChickenSettings();
+    const alertSettings = this.getAlertSettings();
     this.entities.set(EntityType.Chicken, chickenSettings);
+    this.entities.set(EntityType.Alert, alertSettings);
 
   }
 
@@ -40,6 +42,20 @@ export class EntitiesService implements IEntitiesService {
 
     //aca definimos el nombre de la tabla en nuestro caso chickens
     return new SqlEntitySettings("CHICKENS", columns); 
+  }
+
+  private getAlertSettings(): SqlEntitySettings {
+    const columns: SqlColumnSettings[] = [
+      new SqlColumnSettings("ID", "id", true),
+      new SqlColumnSettings("TITLE", "title", false),
+      new SqlColumnSettings("DESCRIPTION", "message", false),
+      new SqlColumnSettings("LEVEL", "level", false),
+      new SqlColumnSettings("IS_RESOLVED", "isResolved", false),
+      new SqlColumnSettings("CREATED_AT", "createdAt", false),
+      new SqlColumnSettings("LOTE_ID", "loteId", false),
+    ];
+
+    return new SqlEntitySettings("ALERTS", columns);
   }
   
 }

@@ -1,24 +1,26 @@
 import AlertModel from "../models/alert.model";
 import { AlertDTO } from "../dtos/alert.dto";
-import { GenericCrudService } from "./genericCrud.service";
 import { generateId } from "../utils/generateId";
-import { alertsData } from "../../Infrastructure.Endpoint/data/alerts.data";
+import { IAlertService } from "../interfaces/services/alertService.interface";
+import { IAlertRepository } from "../interfaces/repositories/alertRepository.interface";
+import { inject, injectable } from "tsyringe";
 
 export type ServiceResult<T> = { success: boolean; message?: string; data?: T | null };
 
-export default class AlertService {
-  private repo: GenericCrudService<AlertModel>;
+@injectable()
+export default class AlertService implements IAlertService {
+  private readonly _alertRepository: IAlertRepository;
 
-  constructor() {
-    this.repo = new GenericCrudService<AlertModel>(alertsData);
+  constructor(@inject('IAlertRepository') alertRepository : IAlertRepository) {
+    this._alertRepository = alertRepository;
   }
 
   async getAlerts(): Promise<AlertModel[]> {
-    return this.repo.getAll();
+    return this._alertRepository.getAll();
   }
 
   async getById(id: string): Promise<AlertModel | null> {
-    return this.repo.getById(id);
+    return this._alertRepository.getById(id);
   }
 
   async addAlert(dto: AlertDTO): Promise<ServiceResult<AlertModel>> {
@@ -41,12 +43,17 @@ export default class AlertService {
       resolvedAt
     );
 
-    await this.repo.add(alert);
+    await this._alertRepository.create(alert);
     return { success: true, message: "Alert created", data: alert };
   }
 
-  async updateAlert(id: string, dto: Partial<AlertDTO>): Promise<ServiceResult<AlertModel | null>> {
-    const payload: any = { ...dto };
+  async updateAlert(id: string, dto: AlertDTO): Promise<ServiceResult<AlertModel | null>> {
+    const existing = await this._alertRepository.getById(id);
+    
+    if (!existing) {
+      return { success: false, message: "Alert not found", data: null };
+    }
+    const payload: Partial<AlertDTO> = {...dto};
 
     if (payload.createdAt && typeof payload.createdAt === "string") {
       const d = new Date(payload.createdAt);
@@ -59,17 +66,18 @@ export default class AlertService {
       payload.resolvedAt = d;
     }
 
-    const result = this.repo.update(id, payload as Partial<AlertModel>);
-    if (result.success) {
-      const updated = await this.getById(id);
-      return { success: true, message: result.message, data: updated ?? null };
-    }
-    return { success: false, message: result.message };
+    Object.assign(existing, payload);
+    await this._alertRepository.update(existing);
+    return { success: true, message: "Alert Updated", data: existing };
   }
 
-  async deleteAlert(id: string): Promise<ServiceResult<null>> {
-    const result = this.repo.delete(id);
-    if (result.success) return { success: true, message: result.message };
-    return { success: false, message: result.message };
+  async deleteAlert(id: string): Promise<{ success: boolean; message: string }> {
+    const existing = await this._alertRepository.getById(id);
+    if (!existing) {
+      return { success: false, message: "Alert not found" };
+    }
+    await this._alertRepository.delete(existing);
+    return { success: true, message: "Alert Deleted" };
+    
   }
 }
