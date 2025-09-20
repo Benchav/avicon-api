@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import AlertService from "../../Domain.Endpoint/services/alert.service";
 import { AlertDTO } from "../../Domain.Endpoint/dtos/alert.dto";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export default class AlertController {
   private readonly service: AlertService;
 
-  constructor(service: AlertService) {
+  constructor(@inject('IAlertService') service: AlertService) {
     this.service = service;
   }
 
