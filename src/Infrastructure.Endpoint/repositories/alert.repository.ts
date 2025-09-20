@@ -43,7 +43,7 @@ export class AlertRepository implements IAlertRepository {
   }
   async getById(id: string): Promise<AlertModel | null> {
     const readCommand = this._operationBuilder
-      .Initialize(EntityType.Chicken)
+      .Initialize(EntityType.Alert)
       .WithOperation(SqlReadOperation.SelectById)
       .WithId(id)
       .BuildReader();
