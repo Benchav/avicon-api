@@ -1,3 +1,4 @@
+import { inject, injectable } from "tsyringe";
 import { IAlertRepository } from "../../Domain.Endpoint/interfaces/repositories/alertRepository.interface";
 import AlertModel from "../../Domain.Endpoint/models/alert.model";
 import {
@@ -8,13 +9,14 @@ import { ISingletonSqlConnection } from "../database/dbConnection.interface";
 import { ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
 import { EntityType } from "../utils/entityTypes";
 
+@injectable()
 export class AlertRepository implements IAlertRepository {
   private readonly _operationBuilder: ISqlCommandOperationBuilder;
   private readonly _connection: ISingletonSqlConnection;
 
   constructor(
-    operationBuilder: ISqlCommandOperationBuilder,
-    connection: ISingletonSqlConnection
+    @inject('IOperationBuilder') operationBuilder: ISqlCommandOperationBuilder,
+    @inject('ISingletonSqlConnection') connection: ISingletonSqlConnection
   ) {
     this._operationBuilder = operationBuilder;
     this._connection = connection;
