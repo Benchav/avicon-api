@@ -1,18 +1,17 @@
 import AlertModel from "../models/alert.model";
 import { AlertDTO } from "../dtos/alert.dto";
-import { GenericCrudService } from "./genericCrud.service";
 import { generateId } from "../utils/generateId";
-import { alertsData } from "../../Infrastructure.Endpoint/data/alerts.data";
 import { IAlertService } from "../interfaces/services/alertService.interface";
-import { IChickenRepository } from "../interfaces/repositories/chickenRepository.interface";
 import { IAlertRepository } from "../interfaces/repositories/alertRepository.interface";
+import { inject, injectable } from "tsyringe";
 
 export type ServiceResult<T> = { success: boolean; message?: string; data?: T | null };
 
+@injectable()
 export default class AlertService implements IAlertService {
   private readonly _alertRepository: IAlertRepository;
 
-  constructor(alertRepository : IAlertRepository) {
+  constructor(@inject('IAlertRepository') alertRepository : IAlertRepository) {
     this._alertRepository = alertRepository;
   }
 
