@@ -8,7 +8,7 @@
 
 ###
 
-<p align="left">API para la gestión de pollos en granjas, desarrollada con <strong>Node.js, SQLite</strong>, <strong>Express</strong> y <strong>TypeScript</strong>, documentada con <strong>Swagger</strong> y utilizando <strong>software libre</strong>.  <br>El objetivo es ofrecer una solución innovadora para controlar el ciclo de vida de los pollos: desde su nacimiento hasta el momento en que están listos para carne, incluyendo su estado de salud y estadísticas por lote, esto mejorara la produccion y el corrento funcionamiento de los procesos internos.</p>
+<p align="left">API para la gestión de pollos en granjas, desarrollada con <strong>Node.js, SQLite</strong>, <strong>Express</strong> y <strong>TypeScript</strong>, documentada con <strong>Swagger</strong> y utilizando <strong>software libre</strong>.  <br>El objetivo es ofrecer una solución innovadora para controlar el ciclo de vida de los pollos: desde su nacimiento hasta el momento en que están listos para carne, incluyendo su estado de salud y estadísticas por lote, esto mejorara la produccion y el corrento funcionamiento de los procesos internos, reduciendo perdidas al mínimo.</p>
 
 ###
 
