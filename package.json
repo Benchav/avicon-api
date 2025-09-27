@@ -21,6 +21,7 @@
   "homepage": "https://github.com/oscarMolina1523/avicon-api#readme",
   "description": "",
   "dependencies": {
+    "@libsql/client": "^0.15.15",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "reflect-metadata": "^0.2.2",
