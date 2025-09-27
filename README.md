@@ -16,7 +16,7 @@
 
 ###
 
-<p align="left">- [Node.js](https://nodejs.org/) – Runtime de JavaScript<br>- [Express](https://expressjs.com/) – Framework web<br>- [TypeScript](https://www.typescriptlang.org/) – Tipado estático<br>- [Swagger](https://swagger.io/) – Documentación interactiva de API<br>- [ts-node-dev](https://github.com/wclr/ts-node-dev) – Hot reload para TypeScript<br>- [Turso-Sqlite]https://turso.tech/</p>
+<p align="left">- [Node.js](https://nodejs.org/) – Runtime de JavaScript<br>- [Express](https://expressjs.com/) – Framework web<br>- [TypeScript](https://www.typescriptlang.org/) – Tipado estático<br>- [Swagger](https://swagger.io/) – Documentación interactiva de API<br>- [ts-node-dev](https://github.com/wclr/ts-node-dev) – Hot reload para TypeScript<br>- [Turso-Sqlite]https://turso.tech/ - Almacenamiento de base de datos en la nube</p>
 
 ###
 
