@@ -6,24 +6,13 @@ import { reportesData } from '../data/reportes.data';
 import { saludData } from '../data/salud.data';
 import { createClient } from '@libsql/client';
 
-// URL de Turso
 const dbUrl = process.env.DATABASE_URL || 'libsql://farmdb-escanor.aws-eu-west-1.turso.io';
-
-// Función helper para simular prepare/run/finalize
-function prepare(db: ReturnType<typeof createClient>, sql: string) {
-  return {
-    run: async (params: any[]) => db.execute(sql, params),
-    finalize: async () => {}, // no hace nada, solo para mantener tu estilo
-  };
-}
-
+const token = process.env.DATABASE_AUTH_TOKEN || "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NTkwMDgyNzIsImlkIjoiYzY4Mjc0YTctYjNjYi00OWVkLWFmODctYzhmMjhhYjIzYzc4IiwicmlkIjoiOWI4YjE5MTktMGM4Yi00YjkzLTgzYzMtZWM2MmFjZTA1ZDJlIn0.nQH-7NfpF58A-PFYd3j_8EAzHAQof2YwptCCa0MUD5hzX1X5OpcWCqsUj1yVfr_GcocgKRrt0FegTTtTnGRxAg";
 export async function initializeDatabase(): Promise<void> {
-  const db = createClient({ url: dbUrl });
+  const db = createClient({ url: dbUrl, authToken: token });
 
   try {
-    //
-    // TABLA CHICKENS
-    //
+    // CHICKENS
     await db.execute(`
       CREATE TABLE IF NOT EXISTS CHICKENS (
         ID TEXT PRIMARY KEY,
@@ -38,30 +27,26 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
-    const insertChickenStmt = prepare(db, `
-      INSERT OR IGNORE INTO CHICKENS (
-        ID, LOTE_ID, NAME, RACE, BIRTHDATE, CURRENT_WEIGHT, HEALTH_STATUS, DATE_READY_FOR_MEAT, DISEASE_HISTORY
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
     for (const chicken of chickenData) {
-      await insertChickenStmt.run([
-        chicken.id,
-        chicken.loteId,
-        chicken.name,
-        chicken.race,
-        chicken.birthdate,
-        chicken.currentWeight,
-        chicken.healthStatus === Health.HEALTHY ? 1 : 0,
-        (chicken.dateReadyForMeat as Date).toISOString(),
-        chicken.diseaseHistory,
-      ]);
+      await db.execute(
+        `INSERT OR IGNORE INTO CHICKENS
+          (ID, LOTE_ID, NAME, RACE, BIRTHDATE, CURRENT_WEIGHT, HEALTH_STATUS, DATE_READY_FOR_MEAT, DISEASE_HISTORY)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          chicken.id,
+          chicken.loteId ?? null,
+          chicken.name ?? null,
+          chicken.race ?? null,
+          chicken.birthdate ?? null,
+          chicken.currentWeight ?? null,
+          chicken.healthStatus === Health.HEALTHY ? 1 : 0,
+          (chicken.dateReadyForMeat as Date)?.toISOString() ?? null,
+          chicken.diseaseHistory ?? null,
+        ]
+      );
     }
-    await insertChickenStmt.finalize();
 
-    //
-    // TABLA ALERTS
-    //
+    // ALERTS
     await db.execute(`
       CREATE TABLE IF NOT EXISTS ALERTS (
         ID TEXT PRIMARY KEY,
@@ -74,28 +59,24 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
-    const insertAlertStmt = prepare(db, `
-      INSERT OR IGNORE INTO ALERTS (
-        ID, TITLE, DESCRIPTION, LEVEL, IS_RESOLVED, CREATED_AT, LOTE_ID
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-
     for (const alert of alertsData) {
-      await insertAlertStmt.run([
-        alert.id,
-        alert.title,
-        alert.message,
-        alert.level,
-        alert.isResolved ? 1 : 0,
-        (alert.createdAt as Date).toISOString(),
-        alert.loteId,
-      ]);
+      await db.execute(
+        `INSERT OR IGNORE INTO ALERTS
+          (ID, TITLE, DESCRIPTION, LEVEL, IS_RESOLVED, CREATED_AT, LOTE_ID)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [
+          alert.id,
+          alert.title ?? null,
+          alert.message ?? null,
+          alert.level ?? null,
+          alert.isResolved ? 1 : 0,
+          (alert.createdAt as Date)?.toISOString() ?? null,
+          alert.loteId ?? null,
+        ]
+      );
     }
-    await insertAlertStmt.finalize();
 
-    //
-    // TABLA LOTES
-    //
+    // LOTES
     await db.execute(`
       CREATE TABLE IF NOT EXISTS LOTES (
         ID TEXT PRIMARY KEY,
@@ -109,29 +90,25 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
-    const insertLoteStmt = prepare(db, `
-      INSERT OR IGNORE INTO LOTES (
-        ID, CODE, NAME, LOCATION, CAPACITY, CREATED_AT, STATUS, DESCRIPTION
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
     for (const lote of lotesData) {
-      await insertLoteStmt.run([
-        lote.id,
-        lote.code,
-        lote.name,
-        lote.location,
-        lote.capacity,
-        (lote.createdAt as Date).toISOString(),
-        lote.status,
-        lote.description,
-      ]);
+      await db.execute(
+        `INSERT OR IGNORE INTO LOTES
+          (ID, CODE, NAME, LOCATION, CAPACITY, CREATED_AT, STATUS, DESCRIPTION)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          lote.id,
+          lote.code ?? null,
+          lote.name ?? null,
+          lote.location ?? null,
+          lote.capacity ?? null,
+          (lote.createdAt as Date)?.toISOString() ?? null,
+          lote.status ?? null,
+          lote.description ?? null,
+        ]
+      );
     }
-    await insertLoteStmt.finalize();
 
-    //
-    // TABLA REPORTS
-    //
+    // REPORTS
     await db.execute(`
       CREATE TABLE IF NOT EXISTS REPORTS (
         ID TEXT PRIMARY KEY,
@@ -146,30 +123,26 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
-    const insertReportStmt = prepare(db, `
-      INSERT OR IGNORE INTO REPORTS (
-        ID, TITLE, DESCRIPTION, TYPE, STATUS, LOTE_ID, CREATED_BY, CREATED_AT, RESOLVED_AT
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
     for (const report of reportesData) {
-      await insertReportStmt.run([
-        report.id,
-        report.title,
-        report.description,
-        report.type,
-        report.status,
-        report.loteId,
-        report.createdBy,
-        (report.createdAt as Date).toISOString(),
-        report.resolvedAt ? (report.resolvedAt as Date).toISOString() : null,
-      ]);
+      await db.execute(
+        `INSERT OR IGNORE INTO REPORTS
+          (ID, TITLE, DESCRIPTION, TYPE, STATUS, LOTE_ID, CREATED_BY, CREATED_AT, RESOLVED_AT)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          report.id,
+          report.title ?? null,
+          report.description ?? null,
+          report.type ?? null,
+          report.status ?? null,
+          report.loteId ?? null,
+          report.createdBy ?? null,
+          (report.createdAt as Date)?.toISOString() ?? null,
+          report.resolvedAt ? (report.resolvedAt as Date).toISOString() : null,
+        ]
+      );
     }
-    await insertReportStmt.finalize();
 
-    //
-    // TABLA HEALTH_RECORDS
-    //
+    // HEALTH_RECORDS
     await db.execute(`
       CREATE TABLE IF NOT EXISTS HEALTH_RECORDS (
         ID TEXT PRIMARY KEY,
@@ -182,30 +155,28 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
 
-    const insertSaludStmt = prepare(db, `
-      INSERT OR IGNORE INTO HEALTH_RECORDS (
-        ID, LOTE_ID, DISEASE, TREATMENT, OBSERVATIONS, STATUS, CREATED_AT
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-
     for (const salud of saludData) {
-      await insertSaludStmt.run([
-        salud.id,
-        salud.loteId,
-        salud.disease,
-        salud.treatment,
-        salud.observations,
-        salud.status,
-        (salud.createdAt as Date).toISOString(),
-      ]);
+      await db.execute(
+        `INSERT OR IGNORE INTO HEALTH_RECORDS
+          (ID, LOTE_ID, DISEASE, TREATMENT, OBSERVATIONS, STATUS, CREATED_AT)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [
+          salud.id,
+          salud.loteId ?? null,
+          salud.disease ?? null,
+          salud.treatment ?? null,
+          salud.observations ?? null,
+          salud.status ?? null,
+          (salud.createdAt as Date)?.toISOString() ?? null,
+        ]
+      );
     }
-    await insertSaludStmt.finalize();
 
+    console.log('Base de datos inicializada correctamente en Turso.');
   } catch (error) {
     console.error('Error al inicializar la base de datos:', error);
   } finally {
     await db.close();
-    console.log('\nConexión a la base de datos cerrada.');
   }
 }
 

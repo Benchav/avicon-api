@@ -9,7 +9,8 @@ import lotesRoutes from "./WebApi/routes/lotes.routes";
 import saludRoutes from "./WebApi/routes/salud.routes";
 import alertsRoutes from "./WebApi/routes/alerts.routes";
 import cors from 'cors';
-import { initializeDatabase } from "./Infrastructure.Endpoint/database/init-db";
+import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso-db";
+//import { initializeDatabase } from "./Infrastructure.Endpoint/database/init-db";
 
 
 const app = express();
