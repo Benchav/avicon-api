@@ -28,11 +28,11 @@ app.use(cors())
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use("/auth", authRoutes);
 app.use("/lotes",validateToken, lotesRoutes);
-app.use("/chickens", chickenRoutes);
-app.use("/salud", saludRoutes);
-app.use("/alerts", alertsRoutes);
-app.use("/reportes", reportesRoutes);
-app.use("/users", userRoutes);
+app.use("/chickens",validateToken, chickenRoutes);
+app.use("/salud",validateToken, saludRoutes);
+app.use("/alerts",validateToken, alertsRoutes);
+app.use("/reportes",validateToken, reportesRoutes);
+app.use("/users",validateToken, userRoutes);
 
 
 
