@@ -8,6 +8,7 @@ import chickenRoutes from "./WebApi/routes/chickens.routes"
 import lotesRoutes from "./WebApi/routes/lotes.routes";
 import saludRoutes from "./WebApi/routes/salud.routes";
 import alertsRoutes from "./WebApi/routes/alerts.routes";
+import userRoutes from "./WebApi/routes/user.routes";
 import cors from 'cors';
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso-db";
 //import { initializeDatabase } from "./Infrastructure.Endpoint/database/init-db";
@@ -27,6 +28,7 @@ app.use("/lotes", lotesRoutes);
 app.use("/salud", saludRoutes);
 app.use("/alerts", alertsRoutes);
 app.use("/reportes", reportesRoutes)
+app.use("/users", userRoutes)
 
 // Función principal para iniciar la aplicación
 async function startServer() {

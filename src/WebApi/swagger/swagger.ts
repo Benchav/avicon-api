@@ -15,9 +15,9 @@ const options = {
       // {
       //   url: "http://localhost:3000",
       //   description: "Local server",
-      // },
+     //  },
       {
-        url: "https://avicon-api.vercel.app/",
+        url: "https://avicon-api.vercel.app",
         description: "Production server",
       },
     ],
