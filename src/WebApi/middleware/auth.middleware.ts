@@ -1,7 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-const JWT_SECRET = "clave_super_secreta";
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+    throw new Error("FATAL ERROR: JWT_SECRET no está definido en las variables de entorno.");
+}
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const header = req.headers.authorization;
