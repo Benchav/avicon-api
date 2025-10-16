@@ -9,6 +9,8 @@ import lotesRoutes from "./WebApi/routes/lotes.routes";
 import saludRoutes from "./WebApi/routes/salud.routes";
 import alertsRoutes from "./WebApi/routes/alerts.routes";
 import userRoutes from "./WebApi/routes/user.routes";
+import authRoutes from "./WebApi/routes/auth.routes";
+import { authMiddleware } from "./WebApi/middleware/auth.middleware";
 import cors from 'cors';
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso-db";
 //import { initializeDatabase } from "./Infrastructure.Endpoint/database/init-db";
@@ -27,8 +29,14 @@ app.use("/chickens", chickenRoutes);
 app.use("/lotes", lotesRoutes);
 app.use("/salud", saludRoutes);
 app.use("/alerts", alertsRoutes);
-app.use("/reportes", reportesRoutes)
-app.use("/users", userRoutes)
+app.use("/reportes", reportesRoutes);
+app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
+
+
+app.get("/perfil", authMiddleware, (req, res) => {
+  res.json({ message: "Bienvenido al perfil", user: (req as any).user });
+});
 
 // Función principal para iniciar la aplicación
 async function startServer() {
