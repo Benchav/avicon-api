@@ -1,10 +1,9 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { userData } from "../../Infrastructure.Endpoint/data/user.data";
 import UserModel, { UserRole } from "../models/user.model";
+import { generateAccesToken } from "../../WebApi/utils/jwtUtils";
 
 export default class AuthService {
-  private JWT_SECRET = "clave_super_secreta"; 
 
   register(dto: { username: string; email: string; password: string; role?: UserRole }) {
     const exists = userData.find(u => u.email === dto.email);
@@ -36,11 +35,8 @@ export default class AuthService {
     const valid = bcrypt.compareSync(password, user.password);
     if (!valid) throw new Error("Contraseña incorrecta");
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
-      this.JWT_SECRET,
-      { expiresIn: "2h" }
-    );
+    const token = generateAccesToken(user);
+    console.log(token);
 
     return {
       message: "Inicio de sesión exitoso",
@@ -49,11 +45,4 @@ export default class AuthService {
     };
   }
 
-  verifyToken(token: string) {
-    try {
-      return jwt.verify(token, this.JWT_SECRET);
-    } catch {
-      throw new Error("Token inválido o expirado");
-    }
-  }
 }

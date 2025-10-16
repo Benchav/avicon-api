@@ -1,27 +1,32 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { UserRole } from "../../Domain.Endpoint/models/user.model";
+import UserModel from "../../Domain.Endpoint/models/user.model";
 dotenv.config();
 
-
-export function generateAccesToken(user: UserRole) {
-  const secret = process.env.SECRET;
+export function generateAccesToken(user: UserModel) {
+  const secret = process.env.JWT_SECRET;
   if (!secret)
     throw new Error("JWT SECRET is not defined in environment variables");
 
-  return jwt.sign(user, secret, { expiresIn: "1d" });
+  const payload = {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    role: user.role,
+    // Note: Do NOT include the password or sensitive fields like hashedPassword here!
+  };
+
+  return jwt.sign(payload, secret, { expiresIn: "1d" });
 }
 
-
-
 export function validateToken(req: Request, res: Response, next: NextFunction) {
-  const secret = process.env.SECRET;
+  const secret = process.env.JWT_SECRET;
   if (!secret)
     throw new Error("JWT SECRET is not defined in environment variables");
-  let accessToken = req.headers["authorization"] ;
+  let accessToken = req.headers["authorization"];
   // Si no está en headers, revisa en la query
-  //req.query.token <--ahi en token puedes cambiar la palabra por la que 
+  //req.query.token <--ahi en token puedes cambiar la palabra por la que
   //deseas que sea ya sea accessToken u otra por ahora debes poner token y el jsontoken
   if (!accessToken && req.query.token) {
     accessToken = req.query.token as string;
@@ -48,8 +53,8 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
   });
 }
 
-export function decodeToken(req: Request): UserRole {
-  const secret = process.env.SECRET;
+export function decodeToken(req: Request): UserModel {
+  const secret = process.env.JWT_SECRET;
   if (!secret) throw new Error("JWT SECRET is not defined");
 
   const authHeader = req.headers["authorization"];
@@ -59,6 +64,6 @@ export function decodeToken(req: Request): UserRole {
     ? authHeader.slice(7)
     : authHeader;
 
-  const decoded = jwt.verify(token, secret) as UserRole;
+  const decoded = jwt.verify(token, secret) as UserModel;
   return decoded;
 }

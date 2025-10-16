@@ -13,6 +13,7 @@ import authRoutes from "./WebApi/routes/auth.routes";
 import { authMiddleware } from "./WebApi/middleware/auth.middleware";
 import cors from 'cors';
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso-db";
+import { validateToken } from "./WebApi/utils/jwtUtils";
 //import { initializeDatabase } from "./Infrastructure.Endpoint/database/init-db";
 
 
@@ -25,13 +26,14 @@ app.use(express.json());
 app.use(cors())
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+app.use("/auth", authRoutes);
+app.use("/lotes",validateToken, lotesRoutes);
 app.use("/chickens", chickenRoutes);
-app.use("/lotes", lotesRoutes);
 app.use("/salud", saludRoutes);
 app.use("/alerts", alertsRoutes);
 app.use("/reportes", reportesRoutes);
 app.use("/users", userRoutes);
-app.use("/auth", authRoutes);
+
 
 
 app.get("/perfil", authMiddleware, (req, res) => {
